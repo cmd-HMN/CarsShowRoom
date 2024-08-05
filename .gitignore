@@ -25,3 +25,5 @@ dist-ssr
 .gitignore
 /server/.env
 /client/.env
+/server/.gitignore
+/client/.gitignore
