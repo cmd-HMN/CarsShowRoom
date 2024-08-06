@@ -1,4 +1,4 @@
-import { Request, Response } from "express"
+import { query, Request, Response } from "express"
 import { Cars } from "../models/cars.model"
 
 export const getAllCars = async(req:Request, res:Response) => {
@@ -6,12 +6,12 @@ export const getAllCars = async(req:Request, res:Response) => {
     try {
 
         const query = constructSearchQuery(req.query)
-        const pageSize = 5
+        const pageSize = parseInt(req.query.pageSize ? req.query.pageSize.toString() : '3')
         const pageNumber = parseInt(req.query.page ? req.query.page.toString() : '1')
         const skip = (pageNumber - 1) * pageSize;
         const car = await Cars.find(query).skip(skip).limit(pageSize).exec()
 
-        const total = await Cars.countDocuments().exec()
+        const total = await Cars.countDocuments(query).exec()
 
         const response = {
             data: car,
@@ -51,14 +51,13 @@ export const getSearch = async(req:Request, res:Response) => {
 
     try {
 
-        const damn = req.query.model
-        const query = constructSearchQuery(req.query);
-        const pageSize = 3;
+        const query = constructSearchQuery(req.query)
+        const pageSize = parseInt(req.query.pageSize ? req.query.pageSize.toString() : '3')
         const pageNumber = parseInt(req.query.page ? req.query.page.toString() : '1');
         const skip = (pageNumber - 1) * pageSize;
-        const car = await Cars.find(query).limit(pageSize).exec()
+        const car = await Cars.find(query).skip(skip).limit(pageSize).exec()
 
-        const total = await Cars.countDocuments().exec()
+        const total = await Cars.countDocuments(query).exec()
 
         const response = {
             data: car,
@@ -82,7 +81,11 @@ export const constructSearchQuery = (queryParams: any) => {
 
     if (queryParams.model) {
         constructedQuery.model = new RegExp(queryParams.model, 'i');
-        console.log("Constructed query:", constructedQuery);
     } 
+
+    if(queryParams.company){
+        constructedQuery.company = new RegExp(queryParams.company, 'i')
+    }
+
     return constructedQuery
 }

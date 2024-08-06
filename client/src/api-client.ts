@@ -412,11 +412,14 @@ export const getAllCars = async (searchParams: searchParams):Promise<CarsSearchP
     if(searchParams.page){
         queryParams.append('page', searchParams.page || "");
     }
+    if(searchParams.pageSize){
+        queryParams.append('pageSize', searchParams.pageSize || "");
+    }
+    
     const response = await fetch(`${API_BASE_URL}/api/shop?${queryParams}`, {
         credentials: 'include',
     })
 
-    console.log(`${API_BASE_URL}/api/shop${queryParams}`)
     if(!response.ok) {
         throw new Error('Sign in failed')
     }
@@ -439,7 +442,9 @@ export const getLatestCar = async():Promise<CarType[]> => {
 
 export type searchParams = {
     model?: string
+    company?: string
     page?:string
+    pageSize?:string
 }
 export const shopSearch = async(params: searchParams):Promise<CarsSearchProps> => {
 
@@ -447,8 +452,16 @@ export const shopSearch = async(params: searchParams):Promise<CarsSearchProps> =
     if(params.model){
         queryParams.append('model', params.model || "");
     }
-    console.log(params)
-
+    if(params.company){
+        queryParams.append('company', params.company || "");
+    }
+    if(params.page){
+        queryParams.append('page', params.page || "");
+    }
+    if(params.pageSize){
+        queryParams.append('pageSize', params.pageSize || "");
+    }
+    
     const response = await fetch(`${API_BASE_URL}/api/shop/search?${queryParams}`, {
         credentials: 'include',
     })

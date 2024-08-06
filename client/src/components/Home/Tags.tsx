@@ -11,8 +11,8 @@ const   Tags = () =>  {
         >
           <div className="absolute inset-0 bg-orange-400 opacity-50 mix-blend-multiply" />
         </div>
-        <div className="relative flex flex-row justify-center items-center text-orange-500 h-full gap-10 md:gap-40 xl:gap-80 2xl:gap-96 text-sm md:text-lg xl:text-xl 2xl:text-1xl sm:text-[10px]">
-          <div className="flex flex-col justify-center items-center gap-2">
+        <div className="relative flex flex-row justify-center items-center  text-orange-500 h-full gap-10 md:gap-40 xl:gap-80 2xl:gap-96 text-sm md:text-lg xl:text-xl 2xl:text-1xl sm:text-[10px]">
+          <div className="flex flex-col justify-center items-center gap-2 text-[8px] sm:text-sm">
             <div className="border rounded-full p-3 border-orange-500 ">
                 <GrMoney />
             </div>
@@ -21,7 +21,7 @@ const   Tags = () =>  {
             </h1>
           </div>
 
-          <div className="flex flex-col justify-center items-center  gap-2">
+          <div className="flex flex-col justify-center items-center text-[8px] gap-2 sm:text-sm">
             <div className="border rounded-full p-3 border-orange-500">
                 <FaSearch/>
             </div>
@@ -30,7 +30,7 @@ const   Tags = () =>  {
             </h1>
           </div>
 
-          <div className="flex flex-col justify-center items-center  gap-2">
+          <div className="flex flex-col justify-center items-center text-[8px] gap-2 sm:text-sm">
             <div className="border rounded-full p-3 border-orange-500">
                 <FaSmileBeam/>
             </div>

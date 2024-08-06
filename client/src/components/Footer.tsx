@@ -9,14 +9,14 @@ const Footer = () => {
                 <p>© {year} CARZ ALL RIGHTS</p>
                 <p>
                     Made by HMN (Link 👉
-                    <Link to={'https://github.com/HMN01'}>
+                    <Link to={'https://github.com/cmd-HMN'}>
                         <i className="fa fa-github" />
                     </Link>)
                 </p>
             </div>
             
-            <div className="text-[8px] sm:text-2xl text-white font-cute my-2 sm:my-0">
-                github.com/HMN01
+            <div className="text-[8px] sm:text-2xl text-white font-cute my-2 sm:my-0 uppercase">
+                www.carz.com
             </div>
             
             <div className="text-[3px] sm:text-base text-white">

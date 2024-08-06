@@ -19,8 +19,8 @@ const FavoritePage = () => {
   );
 
   return (
-    <div className="w-full h-screen bg-slate-100 flex">
-      <div className="flex w-full h-screen sticky top-0">
+    <div className="h-screen flex">
+      <div className="flex w-full  sticky top-0">
         <SideBar
           optionOne={false}
           optionTwo={true}
