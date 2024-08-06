@@ -7,7 +7,6 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { AdminContextProvider } from './context/AdminContext.tsx'
 import { LoadingProvider} from './context/LoadingContext.tsx'
 import { BrowserRouter } from 'react-router-dom'
-import { SearchProvider } from './context/SearchContext.tsx'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -23,11 +22,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <QueryClientProvider client={queryClient}>
         <AppContextProvider>
           <AdminContextProvider>
-            <SearchProvider>
             <BrowserRouter>
               <App />
             </BrowserRouter>
-            </SearchProvider>
           </AdminContextProvider>
         </AppContextProvider>,
     </QueryClientProvider>

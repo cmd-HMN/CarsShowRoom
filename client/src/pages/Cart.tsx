@@ -19,8 +19,8 @@ const Cart = () => {
   );
 
   return (
-    <div className="h-screen flex">
-      <div className="flex w-full h-screen sticky top-0">
+    <div className="min-h-screen flex">
+      <div className="flex w-full min-h-screen sticky top-0">
         <SideBar
           optionOne={false}
           optionTwo={false}
@@ -30,7 +30,7 @@ const Cart = () => {
           head="Cart"
         />
         <motion.div
-         className="flex-grow p-3 overflow-y-auto bg-offWhite"
+         className="flex-grow p-3 min-h-screen bg-offWhite"
          initial={{ opacity: 0 }}
          animate={{ opacity: 1 }}
          transition={{ duration: 1 }}>

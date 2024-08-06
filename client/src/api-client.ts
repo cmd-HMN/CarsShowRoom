@@ -405,27 +405,6 @@ export type CarsSearchProps = {
         pages: number,
     },
 };
-export const getAllCars = async (searchParams: searchParams):Promise<CarsSearchProps> => {
-
-
-    const queryParams = new URLSearchParams()
-    if(searchParams.page){
-        queryParams.append('page', searchParams.page || "");
-    }
-    if(searchParams.pageSize){
-        queryParams.append('pageSize', searchParams.pageSize || "");
-    }
-    
-    const response = await fetch(`${API_BASE_URL}/api/shop?${queryParams}`, {
-        credentials: 'include',
-    })
-
-    if(!response.ok) {
-        throw new Error('Sign in failed')
-    }
-    
-    return await response.json()
-}
 
 export const getLatestCar = async():Promise<CarType[]> => {
 
@@ -445,30 +424,52 @@ export type searchParams = {
     company?: string
     page?:string
     pageSize?:string
+    category?:string[]
+    maxPrice?:string
+    minPrice?:string
+    sort?: string
 }
-export const shopSearch = async(params: searchParams):Promise<CarsSearchProps> => {
+
+export const shopSearch_ = async (searchParams: searchParams):Promise<CarsSearchProps> => {
+
 
     const queryParams = new URLSearchParams()
-    if(params.model){
-        queryParams.append('model', params.model || "");
+
+    if(searchParams.model){
+        queryParams.append('model', searchParams.model || "");
     }
-    if(params.company){
-        queryParams.append('company', params.company || "");
+
+    if(searchParams.company){
+        queryParams.append('company', searchParams.company || "");
     }
-    if(params.page){
-        queryParams.append('page', params.page || "");
+    if(searchParams.page){
+        queryParams.append('page', searchParams.page || "");
     }
-    if(params.pageSize){
-        queryParams.append('pageSize', params.pageSize || "");
+    if(searchParams.pageSize){
+        queryParams.append('pageSize', searchParams.pageSize || "");
     }
-    
+    if(searchParams.sort){
+        queryParams.append('sort', searchParams.sort || "");
+    }
+
+    if(searchParams.maxPrice){
+        queryParams.append('maxPrice', searchParams.maxPrice || "");
+    }
+
+    searchParams.category?.forEach((cat) => (
+        queryParams.append('category', cat)
+
+    ))
+    if(searchParams.minPrice) {
+        queryParams.append('minPrice', searchParams.minPrice || "");
+    }
     const response = await fetch(`${API_BASE_URL}/api/shop/search?${queryParams}`, {
         credentials: 'include',
     })
 
     if(!response.ok) {
-        throw new Error('Failed to fetch hotel')
+        throw new Error('Sign in failed')
     }
-
+    
     return await response.json()
 }

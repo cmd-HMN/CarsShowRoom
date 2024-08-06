@@ -34,7 +34,7 @@ const Header = () => {
                   <Link to={"/profile"} className="text-white">
                     <i className="fa fa-user text-white text-sm p-1 hover:text-gray-300 cursor-pointer" />
                   </Link>
-                  <Link to={'/search'}>
+                  <Link to={'/shop'}>
                   <i className="fa fa-search text-white text-sm p-1 hover:text-gray-300 cursor-pointer" />
                   </Link>
                 </div>

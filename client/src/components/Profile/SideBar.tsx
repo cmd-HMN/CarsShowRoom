@@ -83,7 +83,7 @@ const SideBar = ({
   return (
     <motion.div
       ref={sidebarRef}
-      className={`bg-Dark h-full flex flex-col items-center relative`}
+      className={`bg-Dark min-h-screen flex flex-col items-center relative`}
       variants={sidebarVariants}
       initial="closed"
       animate={isOpen ? "open" : "closed"}

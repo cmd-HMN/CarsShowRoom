@@ -30,7 +30,6 @@ import { useEffect } from "react";
 import LoadingScreen from "./components/Loading";
 import SignOut from "./pages/SignOut";
 import FavoritePage from "./pages/FavoritePage";
-import Search from "./pages/Search";
 
 
 function App() {
@@ -61,7 +60,6 @@ function App() {
           <Route path="/blogs" element={<Layout><Blog /></Layout>} />
           <Route path="/shop" element={<Layout><Shop /></Layout>} />
           <Route path="/gallery" element={<Layout><Gallery /></Layout>} />
-          <Route path="/search" element={<Layout><Search /></Layout>} />
           <Route path="/about-us" element={<Layout><AboutUs /></Layout>} />
           <Route path="/admin-guide" element={<Layout><AdminGuide /></Layout>} />
           <Route path="/supporter-guide" element={<Layout><SupporterGuide /></Layout>} />

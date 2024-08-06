@@ -4,7 +4,7 @@ export type CarsType = {
     _id: string;
     model: string;
     company: string;
-    price: string;
+    price: number;
     imageUrls: string[];
     createdAt: Date;
     updatedAt: Date;
@@ -58,7 +58,7 @@ export type CarsType = {
 const CarsSchema = new mongoose.Schema<CarsType>({
     model: {type: String, unique: true},
     company: {type: String, required: true},
-    price: {type: String, required: true},
+    price: {type: Number, required: true},
     imageUrls: {type: [String], default: ['https://res.cloudinary.com/dfpvs69tj/image/upload/v1721793374/kajetan-daroch-eEXqa4OPlm4-unsplash-removebg-preview_pdl4cc.png']},
     description: {type: String, default: '-'},
     category: {type: [String], required: true},
