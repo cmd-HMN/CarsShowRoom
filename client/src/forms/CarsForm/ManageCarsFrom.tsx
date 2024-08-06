@@ -6,7 +6,7 @@ import { useEffect } from "react";
 export type CarType = {
     _id: string;
     model: string;
-    price: string;
+    price: number;
     company: string;
     imageFiles: FileList;
     imageUrls:string[];
@@ -79,7 +79,7 @@ const ManageCarsForm = ({onSave ,isLoading, car}: Props) => {
         const formData = new FormData();
 
         formData.append("model", data.model)
-        formData.append("price", data.price)
+        formData.append("price", data.price.toString())
         formData.append("description", data.description)
         formData.append("company", data.company)        
 

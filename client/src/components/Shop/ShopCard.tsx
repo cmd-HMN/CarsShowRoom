@@ -10,6 +10,7 @@ import { BiHeart } from "react-icons/bi";
 
 type Props = {
   carArray: CarType[] | undefined;
+  total: number | undefined;
 };
 
 interface ErrorWithMessage {
@@ -19,7 +20,7 @@ interface AddToCartVariable {
   user: string;
   carId: string;
 }
-const ShopCard = ({ carArray }: Props) => {
+const ShopCard = ({ carArray, total }: Props) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -149,6 +150,9 @@ const ShopCard = ({ carArray }: Props) => {
     }
   );
 
+  if(carArray?.length == 0){
+    return <div className="text-center">No product found</div>
+  }
   const handleRemoveFromFav = (userID: string, carId: string) => {
     removeFav({ user: userID, carId });
   };
@@ -157,6 +161,9 @@ const ShopCard = ({ carArray }: Props) => {
     <div
       className={`relative w-full flex flex-col sm:flex-row flex-wrap justify-center items-center px-4 sm:px-0  gap-5 py-5`}
     >
+      <div className="absolute top-0 text-xs invisible sm:visible text-white bg-orange-500 p-1 shadow-md cursor-pointer">
+        {total} {total==1 ? 'Car' : 'Cars'} Found
+      </div>
       {carArray?.map((car: CarType) => (
         <div
           key={car?._id}

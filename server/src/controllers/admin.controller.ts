@@ -77,6 +77,7 @@ export const adminCarsFrom = async (req: Request, res: Response) => {
 
         newCar._id = req.userId
 
+        newCar.price = parseInt(req.body.price)
         const car = new Cars(newCar);
 
         await car.save()

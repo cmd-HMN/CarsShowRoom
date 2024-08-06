@@ -1,22 +1,37 @@
 import { query, Request, Response } from "express"
 import { Cars } from "../models/cars.model"
 
-export const getAllCars = async(req:Request, res:Response) => {
+export const shopSearch = async(req:Request, res:Response) => {
 
     try {
-
         const query = constructSearchQuery(req.query)
+        let sort: any = req.query.sort
+        switch (sort)
+        {
+            case "priceAsc":
+                sort = {price: 1}
+                break;
+            case "priceDsc":
+                sort = {price: -1}
+                break;
+            case "rating": 
+                sort = {rating: 1}
+                break;
+            default:
+                sort = {createdAt: -1}
+                break;
+        }
         const pageSize = parseInt(req.query.pageSize ? req.query.pageSize.toString() : '3')
         const pageNumber = parseInt(req.query.page ? req.query.page.toString() : '1')
         const skip = (pageNumber - 1) * pageSize;
-        const car = await Cars.find(query).skip(skip).limit(pageSize).exec()
+        const car = await Cars.find(query).skip(skip).limit(pageSize).sort(sort).exec()
 
         const total = await Cars.countDocuments(query).exec()
 
         const response = {
             data: car,
             pagination: {
-                total,
+                total: total,
                 page: pageNumber,
                 pages: Math.ceil(total / pageSize),
             },
@@ -45,37 +60,6 @@ export const getLatestCars = async(req:Request, res:Response) => {
     }
 }
 
-
-
-export const getSearch = async(req:Request, res:Response) => {
-
-    try {
-
-        const query = constructSearchQuery(req.query)
-        const pageSize = parseInt(req.query.pageSize ? req.query.pageSize.toString() : '3')
-        const pageNumber = parseInt(req.query.page ? req.query.page.toString() : '1');
-        const skip = (pageNumber - 1) * pageSize;
-        const car = await Cars.find(query).skip(skip).limit(pageSize).exec()
-
-        const total = await Cars.countDocuments(query).exec()
-
-        const response = {
-            data: car,
-            pagination: {
-                total,
-                page: pageNumber,
-                pages: Math.ceil(total / pageSize),
-            },
-        };
-
-        res.status(200).json(response)
-
-    }catch (err){
-        res.status(500).json({message: "Error fetching cars", error: err})
-    }
-}
-
-
 export const constructSearchQuery = (queryParams: any) => {
     let constructedQuery: any = {};
 
@@ -85,6 +69,19 @@ export const constructSearchQuery = (queryParams: any) => {
 
     if(queryParams.company){
         constructedQuery.company = new RegExp(queryParams.company, 'i')
+    }
+
+    if(queryParams.category){
+        constructedQuery.category = {
+            $in: Array.isArray(queryParams.category) ? queryParams.category : [queryParams.category]
+        }
+    }
+    if(queryParams.maxPrice){
+        constructedQuery.price = {$lte: parseInt(queryParams.maxPrice)}
+    }
+
+    if(queryParams.minPrice){
+        constructedQuery.price = {$gte: parseInt(queryParams.minPrice)}
     }
 
     return constructedQuery
