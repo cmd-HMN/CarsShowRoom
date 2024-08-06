@@ -1,4 +1,3 @@
-
 type PaginationProps = {
     page: number;
     pages: number;
@@ -17,7 +16,7 @@ const Pagination = ({ page, pages, onPageChange }: PaginationProps) => {
             <button 
                 onClick={() => handlePageChange(page - 1)} 
                 disabled={page === 1}
-                className="px-3 py-1 mx-1 bg-gray-200 rounded disabled:opacity-50"
+                className="text-xs px-2 mx-1 bg-gray-200 rounded disabled:opacity-50 sm:px-3 sm:py-1 sm:text-sm"
             >
                 Previous
             </button>
@@ -25,7 +24,7 @@ const Pagination = ({ page, pages, onPageChange }: PaginationProps) => {
                 <button 
                     key={index} 
                     onClick={() => handlePageChange(index + 1)} 
-                    className={`px-3 py-1 mx-1 ${page === index + 1 ? 'bg-orange-500 text-white' : 'bg-gray-200'}`}
+                    className={`text-xs px-2 py-1 mx-1 ${page === index + 1 ? 'bg-orange-500 text-white' : 'bg-gray-200'} sm:px-3 sm:py-1 sm:text-sm`}
                 >
                     {index + 1}
                 </button>
@@ -33,7 +32,7 @@ const Pagination = ({ page, pages, onPageChange }: PaginationProps) => {
             <button 
                 onClick={() => handlePageChange(page + 1)} 
                 disabled={page === pages}
-                className="px-3 py-1 mx-1 bg-gray-200 rounded disabled:opacity-50"
+                className="text-xs px-2 mx-1 bg-gray-200 rounded disabled:opacity-50 sm:px-3 sm:py-1 sm:text-sm"
             >
                 Next
             </button>

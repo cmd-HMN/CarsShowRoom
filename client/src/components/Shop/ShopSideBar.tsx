@@ -8,6 +8,8 @@ const ShopSideBar = () => {
   const [notShow, setNotShow] = useState<boolean>(false);
 
   const { data: latest } = useQuery("getLatestCar", apiClient.getLatestCar);
+
+  const {data: featured} = useQuery('featuredProduct', apiClient.featuredProduct)
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 640) {
@@ -25,9 +27,10 @@ const ShopSideBar = () => {
     };
   }, []);
 
+
   const sidebarVariants = {
     open: {
-      width: !notShow ? 150 : 70,
+      width: !notShow ? 200 : 70,
       transition: { type: "spring", stiffness: 300, damping: 30 },
     },
   };
@@ -45,20 +48,22 @@ const ShopSideBar = () => {
     >
       <AnimatePresence>
         <motion.div
-          className="w-full space-y-8 mt-8 sticky"
+          className="w-full mt-8 sticky"
           variants={contentVariants}
           initial="hidden"
           animate="visible"
           exit="hidden"
         >
+          <hr className="border-1 border-orange-500 w-full  mt-10" />
           <motion.div
-            className="text-lg font-extrabold text-orange-500 p-2 cursor-pointer text-center mt-10"
+            className="text-sm sm:text-lg font-extrabold text-orange-500 p-2 cursor-pointer text-center"
             whileHover={{ scale: 1.05 }}
           >
             Latest
           </motion.div>
-          <div className="flex flex-col items-center gap-4">
-            <motion.div className="space-y-6 flex flex-col justify-center items-center ">
+          <div className="flex flex-col items-center">
+            <hr className="border-1 mb-2 border-orange-500 w-full" />
+            <motion.div className="space-y-2 flex flex-col justify-start">
               {latest &&
                 latest.map((car ,index) => (
                 <Link to={'/view-details'} key={index}>
@@ -70,24 +75,45 @@ const ShopSideBar = () => {
                       stiffness: 400,
                       damping: 10,
                     }}
-                    animate={{
-                      color: ["#ff0000", "#00ff00", "#0000ff"],
-                      transition: {
-                        duration: 2,
-                        delay: index * 0.2,
-                        repeat: Infinity,
-                        repeatType: "reverse",
-                      },
-                    }}
-                    className=" text-xs cursor-pointer"
+                    className=" text-[8px] cursor-pointer text-white sm:text-xs"
                   >
                     {car.model}
                   </motion.div>
                 </Link>
                 ))}
             </motion.div>
-          </div>
+            </div>
+          <hr className="border-1 border-orange-500 w-full  mt-10" />
+          <motion.div
+            className="text-sm sm:text-lg font-extrabold text-orange-500 p-2 cursor-pointer text-center"
+            whileHover={{ scale: 1.05 }}
+          >
+            Featured
+          </motion.div>
+          <div className="flex flex-col items-center">
+            <hr className="border-1 mb-2 border-orange-500 w-full" />
+            <motion.div className="space-y-2 flex flex-col justify-start p-1 sm:p-0 sm:ml-4">
+              {featured &&
+                featured.map((car ,index) => (
+                <Link to={'/view-details'} key={index}>
+                  <motion.div
+                    whileHover={{ scale: 1.2 }}
+                    key={car._id}
+                    transition={{
+                      type: "spring",
+                      stiffness: 400,
+                      damping: 10,
+                    }}
+                    className=" text-[8px] cursor-pointer text-white sm:text-xs"
+                  >
+                    {car.model}
+                  </motion.div>
+                </Link>
+                ))}
+            </motion.div>
+            </div>
         </motion.div>
+         
       </AnimatePresence>
     </motion.div>
   );

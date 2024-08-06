@@ -37,7 +37,7 @@ const Mail = () => {
                 type="email"
                 id="email"
                 placeholder="Enter email"
-                className="w-[35vh] px-4 py-2 text-black  border rounded-md outline-none transition-all duration-300 focus:border-orange-500 peer focus:w-[45vh] md:py-1 sm:py-0"
+                className="w-[20vh] sm:w-[30vh] px-2 py-1 text-black  border rounded-md outline-none transition-all duration-300 focus:border-orange-500 peer focus:w-[30vh] md:py-1 sm:py-0 sm:focus:w-[45vh]"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -67,7 +67,7 @@ const Mail = () => {
               </svg>
             </div>
           </div>
-            <div className='p-3 px-4 text-white rounded bg-gradient-to-br from-slate-500 to-Dark transition-all duration-300 hover:from-Dark hover:to-slate-500 md:p-3 md:text-xs sm:text-sm sm:p-1'>
+            <div className='p-2 px-4 text-[8px] text-white rounded bg-gradient-to-br from-slate-500 to-Dark transition-all duration-300 hover:from-Dark hover:to-slate-500 sm:p-3 md:p-3 md:text-xs sm:text-sm'>
               <Link   to={'/'} onClick={(e) =>
               {
                 e.preventDefault();
