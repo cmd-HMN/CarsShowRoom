@@ -17,13 +17,13 @@ const SignOut= () => {
   const { showToast } = useAppContext();
   const navigate = useNavigate()
 
-  const mutation = useMutation('signOut', apiClient.signout, {
+  const {mutate, isLoading} = useMutation('signOut', apiClient.signout, {
     onSuccess: async () => {
       showToast({
         message: "Signout Successful",
         type: "SUCCESS",
       });
-      navigate('/')
+     {if (!isLoading) navigate('/');}
     },
     onError: (error: Error) => {
       showToast({
@@ -34,7 +34,7 @@ const SignOut= () => {
   })
 
   const signOut = () => {   
-    mutation.mutate()
+    mutate()
   }
 
   return (

@@ -4,9 +4,11 @@ import * as apiClient from '../api-client'
 import { useAppContext } from "../context/AppContext"
 import { motion } from 'framer-motion';
 import SideBar from "../components/Profile/SideBar";
+import { useNavigate } from "react-router-dom";
 
 const ContactUs = () => {
 
+    const navigate = useNavigate()
     const {register, formState:{errors}, handleSubmit} = useForm<apiClient.ReportForm>()
     const {showToast} = useAppContext()
     const { data: userId } = useQuery("getUserId", apiClient.getUser);
@@ -24,6 +26,7 @@ const ContactUs = () => {
                 message: "Thank you for your feedback!",
                 type: "SUCCESS"
             })
+            navigate('/profile')
         },
         onError: () => {
             showToast({

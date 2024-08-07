@@ -1,4 +1,4 @@
-import { CarType } from '../forms/CarsForm/ManageCarsFrom';
+import { CarsType } from '../../../server/src/models/cars.model';
 export const category = [
     'Sedan',
     'Hatch Back',
@@ -23,7 +23,7 @@ export const category = [
     'Dragster',
 ]
 
-export const specificationArray: (keyof CarType)[] = [
+export const specificationArray: (keyof CarsType)[] = [
     "width",
     "height",
     "length",

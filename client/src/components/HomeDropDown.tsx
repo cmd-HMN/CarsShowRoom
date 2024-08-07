@@ -6,6 +6,7 @@ const HomeDropDown = () => {
   const [hoveredMenu, setHoveredMenu] = useState<string | null>(null);
   const timeoutRef = useRef<number | null>(null);
 
+  
   useEffect(() => {
     const handleResize = () => {
       setIsMenu(window.innerWidth < 640);
@@ -25,7 +26,7 @@ const HomeDropDown = () => {
   const handleMouseLeave = () => {
     timeoutRef.current = window.setTimeout(() => {
       setHoveredMenu(null);
-    }, 200);
+    }, 2000);
   };
 
   useEffect(() => {
@@ -61,6 +62,7 @@ const HomeDropDown = () => {
                   role="menu"
                   aria-orientation="vertical"
                   aria-labelledby="options-menu"
+
                 >
                   <div className="group relative">
                     <Link

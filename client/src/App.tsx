@@ -17,19 +17,16 @@ import ContactUs from "./pages/Contact-us";
 import AdminSignIn from "./pages/AdminSignIn";
 import AdminLog from "./components/AdminLog";
 import AdminCarsForm from "./pages/AdminCarsForm";
-import Gallery from "./pages/Gallery";
 import AdminEditCar from './pages/AdminEditForm';
 import AdminProfile from "./pages/AdminProfile";
 import AdminMyCars from "./pages/AdminMyCars";
 import AboutUs from "./pages/AboutUs";
-import AdminGuide from "./pages/AdminGuide";
-import SupporterGuide from "./pages/SupporterGuide";
-import InvestorGuide from "./pages/InvestorGuide";
 import { useLoadingContext } from "./context/LoadingContext";
 import { useEffect } from "react";
 import LoadingScreen from "./components/Loading";
 import SignOut from "./pages/SignOut";
 import FavoritePage from "./pages/FavoritePage";
+import ViewDetails from "./pages/ViewDetails";
 
 
 function App() {
@@ -59,14 +56,9 @@ function App() {
           <Route path="/sign-up" element={<Layout><SignUp /></Layout>} />
           <Route path="/blogs" element={<Layout><Blog /></Layout>} />
           <Route path="/shop" element={<Layout><Shop /></Layout>} />
-          <Route path="/gallery" element={<Layout><Gallery /></Layout>} />
           <Route path="/about-us" element={<Layout><AboutUs /></Layout>} />
-          <Route path="/admin-guide" element={<Layout><AdminGuide /></Layout>} />
-          <Route path="/supporter-guide" element={<Layout><SupporterGuide /></Layout>} />
-          <Route path="/investor-guide" element={<Layout><InvestorGuide /></Layout>} />
-
-
           <Route path="/admin/sign-in" element={<Layout><AdminSignIn /></Layout>} />
+          <Route path="/view-details/:carId" element={<Layout><ViewDetails /></Layout>} />
 
           <Route element={<UserLog />}>
             <Route path="/profile" element={<Layout><Profile /></Layout>} />

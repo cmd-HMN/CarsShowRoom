@@ -66,7 +66,7 @@ const ShopSideBar = () => {
             <motion.div className="space-y-2 flex flex-col justify-start">
               {latest &&
                 latest.map((car ,index) => (
-                <Link to={'/view-details'} key={index}>
+                <Link to={`/view-details/${car._id}`} key={index}>
                   <motion.div
                     whileHover={{ scale: 1.2 }}
                     key={car._id}
@@ -95,7 +95,7 @@ const ShopSideBar = () => {
             <motion.div className="space-y-2 flex flex-col justify-start p-1 sm:p-0 sm:ml-4">
               {featured &&
                 featured.map((car ,index) => (
-                <Link to={'/view-details'} key={index}>
+                <Link to={`/view-details/${car._id}`} key={index}>
                   <motion.div
                     whileHover={{ scale: 1.2 }}
                     key={car._id}

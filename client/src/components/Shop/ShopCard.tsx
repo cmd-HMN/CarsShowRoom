@@ -227,7 +227,7 @@ const ShopCard = ({ carArray, total }: Props) => {
               )}
             </button>
             <div className="flex flex-row gap-2 items-center border p-2 transition-all hover:scale-110  sm:px-4">
-              <Link to={`/gallery/${car?._id}`} className="text-gray-600">
+              <Link to={`/view-details/${car?._id}`} className="text-gray-600">
                 View Details
               </Link>
             </div>
