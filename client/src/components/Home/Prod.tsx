@@ -246,9 +246,9 @@ const Prod = ({api, heading}: Props) => {
                     }
                   </button>
                 <div className="flex flex-row gap-2 items-center border p-2 transition-all hover:scale-110  sm:px-4">
-                  <Link to={`/gallery/${car?._id}`} className="text-gray-600">
+                  <Link to={`/view-details/${car?._id}`} className="text-gray-600">
                     View Details
-                  </Link> 
+                  </Link> c
                 </div>
                 <div className="flex flex-row  justify-end items-center ml-2 item-center gap-2 transition-all hover:scale-110 text-[12px] sm:text-xl">
                   <button className="text-gray-600" onClick={() =>{ user?.favorite.includes(car._id) ?  handleRemoveFromFav(userId, car._id) : handleAddProdToFav(userId ,car?._id); 

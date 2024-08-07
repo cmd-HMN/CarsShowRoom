@@ -4,13 +4,15 @@ import ShopCard from "../components/Shop/ShopCard";
 import { motion } from "framer-motion";
 import ShopSideBar from "../components/Shop/ShopSideBar";
 import React, { FormEvent, useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
 import Pagination from "../components/Pagination";
 import CategoryFilter from "../components/Shop/CategoryFilter";
-
+import queryString from 'query-string';
 const Shop = () => {
   const navigate = useNavigate();
+  const location = useLocation()
+
   const [show, setShow] = useState<boolean>(false);
   const [model, setModel] = useState<string>('');
   const [company, setCompany] = useState<string>(sessionStorage.getItem('company') || '');
@@ -25,6 +27,25 @@ const Shop = () => {
   const toggleShow = () => {
     setShow(!show);
   };
+
+  useEffect(() => {
+    const homeQuery = queryString.parse(location.search)
+    
+    if (homeQuery.category) {
+      const categoryString: string | null = Array.isArray(homeQuery.category) ? homeQuery.category[0] : homeQuery.category;
+
+      try {
+        if (categoryString != null) {
+          const categories: string[] = JSON.parse(decodeURIComponent(categoryString));
+          setSelectedCategory(categories);
+        } else {
+          setSelectedCategory([]);
+        }
+      } catch (error) {
+        setSelectedCategory([]);
+      }
+    }
+  }, [location.search])
 
   const searchParams = {
     model,

@@ -64,16 +64,6 @@
                             <LinkItem to="https://github.com/cmd-HMN" text="HMN"  />
                         </ul>
                     </div>
-
-                    <div className="text-black w-full sm:w-1/2 md:w-1/3 lg:w-1/5 mb-6 sm:mb-0">
-                        <h3 className="font-semibold text-sm mb-3">BE ONE OF US</h3>
-                        <hr className="border-t-2 border-Dark my-4"/>
-                        <ul>
-                            <LinkItem to="/admin-guide" text="BE A WORKER" />
-                            <LinkItem to="/investor-guide" text="BE A INVESTOR" />
-                            <LinkItem to="/supporter-guide" text="BE A SUPPORTER" />
-                        </ul>
-                    </div>
                 </div>
             </div>
         )

@@ -22,6 +22,7 @@ router.post("/sign-out", (req: Request, res:Response) => {
 })
 
 router.post('/news', newLetter)
+
 router.get("/validate-token", verifyToken, (req: Request, res: Response) => {
     res.status(200).send({
         message: "Token"

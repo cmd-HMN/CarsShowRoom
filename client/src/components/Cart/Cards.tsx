@@ -1,24 +1,76 @@
-import { useQueries } from "react-query";
+import { useMutation, useQueries, useQueryClient } from "react-query";
 import * as apiClient from "../../api-client";
 import Rating from "../Rating";
 import { TbEngine } from "react-icons/tb";
 import { IoCarOutline } from "react-icons/io5";
 import { LuFuel } from "react-icons/lu";
 import { IoMdSpeedometer } from "react-icons/io";
+import { useAppContext } from "../../context/AppContext";
+import { Link } from "react-router-dom";
 
 type Props = {
   userProperty: string[];
+  userId: string
+  fav: boolean
 };
+type CartVariable  = {
+  user: string,
+  carId: string
+}
+interface ErrorWithMessage {
+  message: string;
+}
 
-const Card = ({ userProperty }: Props) => {
+const Card = ({ userProperty, userId, fav }: Props) => {
   const queries =
-    userProperty.map((carId) => ({
+  userProperty.map((carId) => ({
       queryKey: ["fetchCarById", carId],
       queryFn: () => apiClient.fetchCarById(carId),
     })) || [];
-
+    
+  const {showToast} = useAppContext()
   const results = useQueries(queries);
+  const queryClient = useQueryClient()
+  const {mutate: removeCart} = useMutation('removeFromCart', ({user, carId}: CartVariable) => apiClient.removeFromCart(user, carId), {
+    onSuccess: () => {
+      showToast({
+        message: "Product removed from cart",
+        type: "SUCCESS",
+      });
+      queryClient.invalidateQueries('getUserProfile')
+    },
+    onError: (err: unknown) => {
+      const error = err as ErrorWithMessage;
+      showToast({
+        message: error.message,
+        type: "ERROR",
+      });
+    },
+  })
 
+  const handleRemoveFromCart = (userID: string, carId: string) => {
+    removeCart({user: userID, carId})
+  }
+  const {mutate: removeFav} = useMutation('removeFromCart', ({user, carId}: CartVariable) => apiClient.removeFromFav(user, carId), {
+    onSuccess: () => {
+      showToast({
+        message: "Product removed from cart",
+        type: "SUCCESS",
+      });
+      queryClient.invalidateQueries('getUserProfile')
+    },
+    onError: (err: unknown) => {
+      const error = err as ErrorWithMessage;
+      showToast({
+        message: error.message,
+        type: "ERROR",
+      });
+    },
+  })
+
+  const handleRemoveFromFav = (userID: string, carId: string) => {
+    removeFav({user: userID, carId})
+  }
   return (
     <div>
       {results.map((result, index) => {
@@ -44,12 +96,6 @@ const Card = ({ userProperty }: Props) => {
                     {data?.model}
                   </div>
                   <div className="line-clamp-3 leading-tight mb-4 sm:mb-0 text-sm sm:max-w-xs">
-                    {/* <div className="ql-snow">
-                  <div
-                    className="ql-editor"
-                    dangerouslySetInnerHTML={{ __html:   data.description }}
-                  />
-                  </div> */}
                     <div
                       dangerouslySetInnerHTML={{ __html: data?.description }}
                     />
@@ -81,9 +127,16 @@ const Card = ({ userProperty }: Props) => {
               </div>
 
               <div className="flex justify-center items-center relative pt-6 sm:pt-0 ">
-                <button className="absolute bottom-0 right-0 bg-orange-400 p-1 text-white text-sm  opacity-20 transition-all duration-300 hover:opacity-100 shadow-md md:p-4 lg:p-3">
-                  View Details
+                <div className="">
+                <button className="absolute top-0 left-0 sm:left-auto sm:right-0 bg-orange-400 p-1 text-white text-sm transition-all duration-300 hover:bg-red-600 rounded-lg shadow-md md:p-4 lg:p-3" onClick={() => {fav ? handleRemoveFromFav(userId, data._id) : handleRemoveFromCart(userId, data._id)}}>
+                  Remove
                 </button>
+                </div>
+                <div className="absolute bottom-0 right-0 bg-orange-400 p-1 text-white text-sm transition-all duration-300 hover:bg-green-400 rounded-lg  shadow-md md:p-4 lg:p-3">
+                  <Link to={`/view-details/${data?._id}`}>
+                    View Details
+                  </Link> 
+                </div>
               </div>
             </div>
           </div>

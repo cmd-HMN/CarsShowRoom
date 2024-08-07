@@ -1,7 +1,7 @@
 import { FaRegStar, FaStar, FaStarHalfAlt } from "react-icons/fa"
 
 type Props = {
-  rating: number
+  rating: number | undefined
   className:string
 }
 

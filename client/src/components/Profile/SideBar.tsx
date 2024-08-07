@@ -96,7 +96,7 @@ const SideBar = ({
       }}
     >
       <motion.button
-        className={`absolute top-1 -translate-y-1/2 opacity-20 hover:opacity-100 ${
+        className={`absolute top-1/2 -translate-y-1/2 opacity-20 hover:opacity-100 ${
           isOpen ? "right-0 translate-x-1/2" : "left-1/2 -translate-x-1/2"
         } 
                     text-[12px] sm:text-lg bg-orange-500 text-white p-2 rounded-full z-10`}
@@ -110,7 +110,7 @@ const SideBar = ({
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="w-full space-y-8 mt-8 sticky"
+            className="w-full space-y-8 mt-16 sticky"
             variants={contentVariants}
             initial="hidden"
             animate="visible"
