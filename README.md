@@ -2,5 +2,6 @@
 
 To run this first make an .env file in server and client side
 
+{npm}
 
-code:npm run HMN
+npm run HMN
