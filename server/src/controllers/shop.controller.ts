@@ -1,4 +1,4 @@
-import { query, Request, Response } from "express"
+import { Request, Response } from "express"
 import { Cars } from "../models/cars.model"
 
 export const shopSearch = async(req:Request, res:Response) => {
