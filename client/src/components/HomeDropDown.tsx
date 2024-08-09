@@ -5,7 +5,6 @@ const HomeDropDown = () => {
   const [isMenu, setIsMenu] = useState(false);
   const [hoveredMenu, setHoveredMenu] = useState<string | null>(null);
   const timeoutRef = useRef<number | null>(null);
-
   
   useEffect(() => {
     const handleResize = () => {
@@ -106,7 +105,7 @@ const HomeDropDown = () => {
             className="flex items-center relative group"
           >
             <Link
-              to={"blogs"}
+              to={"/blogs"}
               className="text-white hover:text-gray-300"
             >
               Blogs

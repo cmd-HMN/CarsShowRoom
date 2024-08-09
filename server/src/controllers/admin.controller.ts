@@ -99,9 +99,13 @@ export const adminGetCar = async (req: Request, res: Response) => {
 
     try {
 
-        const car = await Cars.findOne({
+        const car = await Cars.findOneAndUpdate({
             _id: id,
             userId: req.userId
+        }, {
+            $inc: { view: 1 }
+        }, {
+            new: true
         })
 
         res.status(200).json(car)
@@ -167,7 +171,33 @@ export const adminEditCar = async (req:Request, res:Response) => {
 export const featuredProduct = async (req: Request, res: Response) => {
 
     try {
-        const car = await Cars.find().sort({sold: -1, like: -1}).limit(9)
+        const car = await Cars.aggregate([
+            {
+              $addFields: {
+                daysSinceCreation: {
+                  $divide: [
+                    { $subtract: [new Date(), "$createdAt"] },
+                    1000 * 60 * 60 * 24 
+                  ]
+                }
+              }
+            },
+            {
+              $addFields: {
+                trendingScore: {
+                  $add: [
+                    { $multiply: ["$view", 1] },     
+                    { $multiply: ["$like", 2] },      
+                    { $multiply: ["$sold", 3] },      
+                    { $divide: [1000, { $add: ["$daysSinceCreation", 1] }] }
+                  ]
+                }
+              }
+            },
+            { $sort: { trendingScore: -1 } },
+            { $limit: 9 }
+          ]);
+      
 
         if(!car) { 
             return res.status(404).json({

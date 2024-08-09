@@ -27,6 +27,8 @@ import LoadingScreen from "./components/Loading";
 import SignOut from "./pages/SignOut";
 import FavoritePage from "./pages/FavoritePage";
 import ViewDetails from "./pages/ViewDetails";
+import AdminBlog from "./pages/AdminBlog";
+import BlogViewDetails from "./pages/BlogViewDetails";
 
 
 function App() {
@@ -59,6 +61,7 @@ function App() {
           <Route path="/about-us" element={<Layout><AboutUs /></Layout>} />
           <Route path="/admin/sign-in" element={<Layout><AdminSignIn /></Layout>} />
           <Route path="/view-details/:carId" element={<Layout><ViewDetails /></Layout>} />
+          <Route path="/blogs/view-details/:blogId" element={<Layout><BlogViewDetails /></Layout>} />
 
           <Route element={<UserLog />}>
             <Route path="/profile" element={<Layout><Profile /></Layout>} />
@@ -70,6 +73,7 @@ function App() {
 
           <Route element={<AdminLog />}>
             <Route path="/admin/form" element={<Layout><AdminCarsForm /></Layout>} />
+            <Route path="/admin/blog" element={<Layout><AdminBlog /></Layout>} />
             <Route path="/admin/profile" element={<Layout><AdminProfile /></Layout>} />
             <Route path="/admin/edit-form/:carId" element={<Layout><AdminEditCar /></Layout>} />
             <Route path="/admin/contributions" element={<Layout><AdminMyCars /></Layout>} />

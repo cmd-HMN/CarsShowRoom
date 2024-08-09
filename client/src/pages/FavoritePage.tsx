@@ -57,7 +57,7 @@ const FavoritePage = () => {
           </div>
           <div className="flex flex-grow items-center justify-center">
             {user?.favorite && user?.favorite.length > 0 ? (
-              <Card userProperty={user?.favorite} userId={userId} fav={false} />
+              <Card userProperty={user?.favorite} userId={userId} fav={true} />
             ) : (
               <div>Favorite is Empty</div>
             )}

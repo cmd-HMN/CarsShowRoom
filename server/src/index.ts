@@ -4,13 +4,14 @@ import 'dotenv/config'
 import cors from 'cors'
 import userRouter from './routes/user.route'
 import authRouter from './routes/auth.route'
-import adminRouter from './routes/admin.router'
+import adminRouter from './routes/admin.route'
 import cookieParser from 'cookie-parser'
 import {v2 as cloudinary} from 'cloudinary';
 import path from 'path';
 import profileRouter from './routes/profile.route'
 import reportRouter from './routes/report.route'
 import shopRouter from './routes/shop.route'
+import blogRouter from './routes/blog.route'
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -41,10 +42,11 @@ app.use('/api/admin', adminRouter)
 app.use('/api/profile', profileRouter)
 app.use('/api/contact-us', reportRouter)
 app.use('/api/shop', shopRouter)
+app.use('/api/blog', blogRouter)
 
 
-app.get('*', (req:Request, res:Response) => {
+{/*app.get('*', (req:Request, res:Response) => {
     res.sendFile(path.join(__dirname, '../../client/dist/index.html'))
 })
-
+*/}
 app.listen(3000)

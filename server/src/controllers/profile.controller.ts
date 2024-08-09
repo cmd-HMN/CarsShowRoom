@@ -114,6 +114,34 @@ export const IncFav = async(req: Request, res:Response) => {
   }
 }
 
+export const DecFav = async(req: Request, res:Response) =>{
+  try {
+    const carId = req.params.carId;
+    const car = await Cars.findByIdAndUpdate({
+      _id: carId
+    }, 
+    { $inc: { like: -1 }, updatedAt: new Date() }
+    , {
+      new: true,
+      runValidators: true
+    })
+
+
+    if(!car){
+      return res.status(404).json({
+        message: "Car not found"
+      })
+    }
+
+    res.status(200).json(car)
+
+} catch (e) {
+  res.status(500).json({
+    message: e
+  })
+}
+}
+
 
 export const removeFromCart = async (req:Request, res:Response) => {
   

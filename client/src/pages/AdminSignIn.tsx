@@ -19,7 +19,7 @@ const AdminSignIn = () => {
                 message: "Signin Successful",
                 type: "SUCCESS"
             });
-            navigate("/admin/form");
+            navigate("/admin/profile");
         },
         onError: (error: Error) => {
             showToast({
@@ -65,7 +65,7 @@ const AdminSignIn = () => {
                 Sign In
             </button>
             <div>
-                
+        
             </div>
             <div className="text-xs">
             <p className="text-center text-gray-500">Forgot password? <a href="/reset-password" className="text-blue-500 hover:text-blue-600">Reset Password</a></p>

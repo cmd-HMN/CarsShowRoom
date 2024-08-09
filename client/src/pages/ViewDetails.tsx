@@ -13,7 +13,6 @@ import {
 import Rating from "../components/Rating";
 import { useState } from "react";
 import { specificationArray } from "../config/cars-option-config";
-import { CarsType } from "../../../server/src/models/cars.model";
 import { useAppContext } from "../context/AppContext";
 import { BsCart, BsHeart } from "react-icons/bs";
 import { FaHeart } from "react-icons/fa";
@@ -138,6 +137,7 @@ const ViewDetails = () => {
   const handleAddProdToFav = (user: string, carId: string) => {
     if (isLoggedIn) {
       fav({ user, carId });
+      increaseFav(carId)
     } else {
       navigate("/sign-in");
       showToast({
@@ -168,8 +168,13 @@ const ViewDetails = () => {
     }
   );
 
+  const {mutate: increaseFav} = useMutation('IncSold', (id: string) => apiClient.IncFav(id))
+  const {mutate: decreaseFav} = useMutation('IncSold', (id: string) => apiClient.DecFav(id))
+
+
   const handleRemoveFromFav = (userID: string, carId: string) => {
     removeFav({ user: userID, carId });
+    decreaseFav(carId)
   };
   return (
     <div className="min-h-screen flex flex-col">
@@ -255,9 +260,9 @@ const ViewDetails = () => {
         <button
           className="text-Dark sm:text-lg  text-xs rounded-md  border border-gray-400 transition-all hover:scale-110"
           onClick={() => {
-            user?.favorite.includes(car?._id ?? "")
-              ? handleRemoveFromFav(userId, car?._id ?? "")
-              : handleAddProdToFav(userId, car?._id ?? "");
+            user?.favorite.includes(car?._id ?? '')
+              ? handleRemoveFromFav(userId, car?._id ?? '') 
+              : handleAddProdToFav(userId, car?._id ?? '')
           }}
         >
           {user?.favorite.includes(car?._id ?? "") ? (
@@ -290,7 +295,7 @@ const ViewDetails = () => {
           Specification
         </div>
         <div className="bg-gray-100 p-8 flex flex-col justify-between sm:grid sm:grid-cols-2 gap-4 text-sm">
-          {specificationArray.map((item: keyof CarsType) => (
+          {specificationArray.map((item: keyof CarType) => (
             <div
               key={item}
               className="flex flex-row justify-between text-xs transition-all duration-300 hover:bg-gray-300 hover:p-2 hover:text-sm cursor-pointer rounded-md"
@@ -303,6 +308,14 @@ const ViewDetails = () => {
           ))}
         </div>
       </div>
+      <div className="relative">
+          <div
+            className="text-[12px] absolute bottom-0 left-7 text-orange-500 hover:text-orange-600 cursor-pointer"
+            onClick={() => navigate('/contact-us')}
+          >
+            Report any Problem
+          </div>
+        </div>
     </div>
   );
 };
