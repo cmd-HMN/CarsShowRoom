@@ -13,6 +13,7 @@ export type CarsType = {
     rating: number;
     sold: number;
     like: number;
+    view: number;
     available:boolean;
     width: string;
     height: string;
@@ -65,6 +66,7 @@ const CarsSchema = new mongoose.Schema<CarsType>({
     rating: {type: Number, default: 0},
     sold: {type: Number, default: 0},
     like: {type: Number, default: 0},
+    view: {type: Number, default: 0},
     available: {type: Boolean, default: true},
     width: {type: String, default: '-'},
     height: {type: String, default: '-'},

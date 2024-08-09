@@ -12,7 +12,7 @@ import { FaHeart } from "react-icons/fa";
 
   type Props = {
   api: () => Promise<CarType[]>
-  heading: string | boolean
+  heading: string
   }
 
 interface ErrorWithMessage {
@@ -25,7 +25,7 @@ interface AddToCartVariable {
 const Prod = ({api, heading}: Props) => {
   const navigate = useNavigate()
   const { data: car } = useQuery(
-    "featuredProduct",
+    heading,
     api,
     {}
   );
@@ -109,6 +109,7 @@ const Prod = ({api, heading}: Props) => {
   const handleAddProdToFav = (user: string , carId: string) => {
     if(isLoggedIn){
       fav({user, carId})
+      increaseFav(carId)
     }
       else{
         navigate('/sign-in')
@@ -119,12 +120,8 @@ const Prod = ({api, heading}: Props) => {
       }
   }
 
-  const {mutate: increaseFav} = useMutation('IncSold', (id: string) => apiClient.ChangeFav(id))
-
-  const handleFav = (Id: string) => {
-    
-    increaseFav(Id)
-  }
+  const {mutate: increaseFav} = useMutation('IncSold', (id: string) => apiClient.IncFav(id))
+  const {mutate: decreaseFav} = useMutation('IncSold', (id: string) => apiClient.DecFav(id))
 
   const {mutate: removeCart} = useMutation('removeFromCart', ({user, carId}: AddToCartVariable) => apiClient.removeFromCart(user, carId), {
     onSuccess: () => {
@@ -165,6 +162,7 @@ const Prod = ({api, heading}: Props) => {
 
   const handleRemoveFromFav = (userID: string, carId: string) => {
     removeFav({user: userID, carId})
+    decreaseFav(carId)
   }
 
   const lengthArray = car?.length || 0;
@@ -248,11 +246,10 @@ const Prod = ({api, heading}: Props) => {
                 <div className="flex flex-row gap-2 items-center border p-2 transition-all hover:scale-110  sm:px-4">
                   <Link to={`/view-details/${car?._id}`} className="text-gray-600">
                     View Details
-                  </Link> c
+                  </Link> 
                 </div>
                 <div className="flex flex-row  justify-end items-center ml-2 item-center gap-2 transition-all hover:scale-110 text-[12px] sm:text-xl">
-                  <button className="text-gray-600" onClick={() =>{ user?.favorite.includes(car._id) ?  handleRemoveFromFav(userId, car._id) : handleAddProdToFav(userId ,car?._id); 
-                    {!user?.favorite.includes(car._id) && handleFav(car._id)}
+                  <button className="text-gray-600" onClick={() =>{ user?.favorite.includes(car._id) ?  handleRemoveFromFav(userId, car._id) : handleAddProdToFav(userId ,car?._id)
                   }}>
                     {user?.favorite?.includes(car._id) ? <FaHeart color="red"/> : <BiHeart /> }
                   </button>

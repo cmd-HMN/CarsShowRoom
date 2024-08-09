@@ -86,6 +86,7 @@ const ShopCard = ({ carArray, total }: Props) => {
   const handleAddProdToFav = (user: string, carId: string) => {
     if (isLoggedIn) {
       fav({ user, carId });
+      increaseFav(carId)
     } else {
       navigate("/sign-in");
       showToast({
@@ -95,13 +96,9 @@ const ShopCard = ({ carArray, total }: Props) => {
     }
   };
 
-  const { mutate: increaseFav } = useMutation("IncSold", (id: string) =>
-    apiClient.ChangeFav(id)
-  );
+  const {mutate: increaseFav} = useMutation('IncSold', (id: string) => apiClient.IncFav(id))
+  const {mutate: decreaseFav} = useMutation('IncSold', (id: string) => apiClient.DecFav(id))
 
-  const handleFav = (Id: string) => {
-    increaseFav(Id);
-  };
 
   const { mutate: removeCart } = useMutation(
     "removeFromCart",
@@ -155,6 +152,7 @@ const ShopCard = ({ carArray, total }: Props) => {
   }
   const handleRemoveFromFav = (userID: string, carId: string) => {
     removeFav({ user: userID, carId });
+    decreaseFav(carId)
   };
 
   return (
@@ -237,10 +235,7 @@ const ShopCard = ({ carArray, total }: Props) => {
                 onClick={() => {
                   user?.favorite.includes(car._id)
                     ? handleRemoveFromFav(userId, car._id)
-                    : handleAddProdToFav(userId, car?._id);
-                  {
-                    !user?.favorite.includes(car._id) && handleFav(car._id);
-                  }
+                    : handleAddProdToFav(userId, car?._id)
                 }}
               >
                 {user?.favorite?.includes(car._id) ? (

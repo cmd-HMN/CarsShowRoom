@@ -1,5 +1,5 @@
 import express from 'express';
-import { addInCart, addInFav,IncFav,IncSold, removeFromCart, removeFromFav } from '../controllers/profile.controller';
+import { addInCart, addInFav,DecFav,IncFav,IncSold, removeFromCart, removeFromFav } from '../controllers/profile.controller';
 import verifyToken from '../middleware/auth.middleware';
 const router = express.Router()
 
@@ -8,7 +8,9 @@ router.put('/cart/:userId/:carId', verifyToken, addInCart)
 
 router.put('/sold/:carId', verifyToken, IncSold)
 
-router.put('/fav/:carId',verifyToken,  IncFav)
+router.put('/IncFav/:carId',verifyToken,  IncFav)
+
+router.put('/DecFav/:carId',verifyToken,  DecFav)
 
 router.put('/favorite/:userId/:carId', verifyToken, addInFav)
 

@@ -354,9 +354,22 @@ export const ChangeSold = async(carId: string) => {
 
     response.json()
 }
-export const ChangeFav = async(carId: string) => {
+export const IncFav = async(carId: string) => {
 
-    const response = await fetch(`${API_BASE_URL}/api/profile/fav/${carId}`,{
+    const response = await fetch(`${API_BASE_URL}/api/profile/IncFav/${carId}`,{
+        credentials: 'include',
+        method: 'PUT',
+    })
+
+    if(!response.ok) {
+        throw new Error('Sign in failed')
+    }
+
+    response.json()
+}
+export const DecFav = async(carId: string) => {
+
+    const response = await fetch(`${API_BASE_URL}/api/profile/DecFav/${carId}`,{
         credentials: 'include',
         method: 'PUT',
     })
@@ -472,4 +485,105 @@ export const shopSearch_ = async (searchParams: searchParams):Promise<CarsSearch
     }
     
     return await response.json()
+}
+
+type Blog = {
+    title:string
+    description:string
+    coverImage: string
+}
+export const BlogUpl = async (data: Blog) => {
+
+    const response = await fetch(`${API_BASE_URL}/api/blog/upload`, {
+        credentials: 'include',
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+
+    if(!response.ok) {
+        console.log(response)
+        throw new Error('upload failed')
+    }
+
+    return response.json()
+}
+
+export const getBlogs = async () => {
+
+    const response = await fetch(`${API_BASE_URL}/api/blog`, {
+        credentials: 'include',
+    })
+
+    if(!response.ok) {
+        throw new Error('No Blogs')
+    }
+    
+    return await response.json()
+}
+
+export const trendingBlog = async () => {
+    
+    const response = await fetch(`${API_BASE_URL}/api/blog/trending-blogs`, {
+        credentials: 'include',
+    })
+
+    if(!response.ok) {
+        throw new Error('No Blogs')
+    }
+    
+    return await response.json()
+}
+export const latestBlog = async () => {
+    
+    const response = await fetch(`${API_BASE_URL}/api/blog/latest-blogs`, {
+        credentials: 'include',
+    })
+
+    if(!response.ok) {
+        throw new Error('No Blogs')
+    }
+    
+    return await response.json()
+}
+
+type SearchBlog = {
+    title:string
+    page?:string
+}
+export const blogSearch = async(searchBlog: SearchBlog) => {
+
+    const query = new URLSearchParams()
+
+    if(searchBlog.title) {
+        query.append('title', searchBlog.title)
+    }
+
+    if(searchBlog.page) {
+        query.append('page', searchBlog.page)
+    }
+
+    const response = await fetch(`${API_BASE_URL}/api/blog/search?${query}`, {
+        credentials: 'include',
+    })
+
+    if(!response.ok) {
+        throw new Error('No Blogs')
+    }
+    
+    return await response.json()
+}
+
+export const fetchBlogById = async(id:string) => {
+    const response = await fetch(`${API_BASE_URL}/api/blog/${id}`, {
+        credentials: 'include',
+        })
+
+        if(!response.ok) {
+            throw new Error('No Blogs')
+            }
+
+            return response.json()
 }
