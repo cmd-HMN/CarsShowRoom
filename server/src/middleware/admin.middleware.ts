@@ -19,15 +19,21 @@ const adminVerifyToken = async (req:Request, res: Response, next: NextFunction) 
         })
     }
 
-    try{
-        const decode = jwt.verify(token, process.env.JWT_SECRET_KEY as string)
-        req.userId = (decode as JwtPayload).userId
-        next()
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY as string)
 
-    }catch (err) {
-        return res.status(500).json({
-            message: "catch Unauthorized"
+        if (typeof decoded === 'object' && 'id' in decoded) {
+            req.userId = decoded.id
+            next();
+        } else {
+            throw new Error("Invalid token");
+        }
+
+    }catch (err){
+        return res.status(401).json({
+            message: "Unauthorized"
         })
+        
     }
 }
 

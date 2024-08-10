@@ -1,7 +1,6 @@
 import {
   Route,
   Routes,
-  useLocation,
 } from "react-router-dom";
 import Layout from "./layout/Layout";
 import Home from "./pages/Home";
@@ -19,35 +18,23 @@ import AdminLog from "./components/AdminLog";
 import AdminCarsForm from "./pages/AdminCarsForm";
 import AdminEditCar from './pages/AdminEditForm';
 import AdminProfile from "./pages/AdminProfile";
-import AdminMyCars from "./pages/AdminMyCars";
 import AboutUs from "./pages/AboutUs";
 import { useLoadingContext } from "./context/LoadingContext";
-import { useEffect } from "react";
 import LoadingScreen from "./components/Loading";
 import SignOut from "./pages/SignOut";
 import FavoritePage from "./pages/FavoritePage";
 import ViewDetails from "./pages/ViewDetails";
 import AdminBlog from "./pages/AdminBlog";
 import BlogViewDetails from "./pages/BlogViewDetails";
+import AdminCars from "./pages/AdminCars";
+import AdminReports from "./pages/AdminReports";
+import AdminSignOut from "./pages/AdminSignOut";
 
 
 function App() {
 
   
-  const {loading , setLoading} = useLoadingContext()
-  const location = useLocation()
-
-  useEffect(() => {
-    const handleStart = () => setLoading(true);
-    const handleComplete = () => setLoading(false);
-
-    handleStart()
-    setTimeout(handleComplete, 3000)
-
-    return () => {
-      handleComplete()
-    };
-  }, [location, setLoading]);
+  const {loading} = useLoadingContext()
 
   return (
     <ChakraProvider>
@@ -72,11 +59,13 @@ function App() {
           </Route>
 
           <Route element={<AdminLog />}>
-            <Route path="/admin/form" element={<Layout><AdminCarsForm /></Layout>} />
+            <Route path="/admin/cars" element={<Layout><AdminCars /></Layout>} />
+            <Route path="/admin/cars/form" element={<Layout><AdminCarsForm /></Layout>} />
             <Route path="/admin/blog" element={<Layout><AdminBlog /></Layout>} />
+            <Route path="/admin/reports" element={<Layout><AdminReports /></Layout>} />
             <Route path="/admin/profile" element={<Layout><AdminProfile /></Layout>} />
-            <Route path="/admin/edit-form/:carId" element={<Layout><AdminEditCar /></Layout>} />
-            <Route path="/admin/contributions" element={<Layout><AdminMyCars /></Layout>} />
+            <Route path="/admin/cars/edit-form/:carId" element={<Layout><AdminEditCar /></Layout>} />
+            <Route path="/admin/sign-out" element={<Layout><AdminSignOut /></Layout>} />
           </Route>
 
           <Route path="*" element={<Layout><Home /></Layout>} />

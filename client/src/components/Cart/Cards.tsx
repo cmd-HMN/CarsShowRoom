@@ -7,6 +7,8 @@ import { LuFuel } from "react-icons/lu";
 import { IoMdSpeedometer } from "react-icons/io";
 import { useAppContext } from "../../context/AppContext";
 import { Link } from "react-router-dom";
+import { useLoadingContext } from "../../context/LoadingContext";
+import { useEffect } from "react";
 
 type Props = {
   userProperty: string[];
@@ -29,9 +31,11 @@ const Card = ({ userProperty, userId, fav }: Props) => {
     })) || [];
     
   const {showToast} = useAppContext()
+  const {setLoading} = useLoadingContext()
   const results = useQueries(queries);
+  const isLoading = results.some(result => result.isLoading);
   const queryClient = useQueryClient()
-  const {mutate: removeCart} = useMutation('removeFromCart', ({user, carId}: CartVariable) => apiClient.removeFromCart(user, carId), {
+  const {mutate: removeCart, isLoading: removeCartLoading} = useMutation('removeFromCart', ({user, carId}: CartVariable) => apiClient.removeFromCart(user, carId), {
     onSuccess: () => {
       showToast({
         message: "Product removed from cart",
@@ -51,7 +55,7 @@ const Card = ({ userProperty, userId, fav }: Props) => {
   const handleRemoveFromCart = (userID: string, carId: string) => {
     removeCart({user: userID, carId})
   }
-  const {mutate: removeFav} = useMutation('removeFromCart', ({user, carId}: CartVariable) => apiClient.removeFromFav(user, carId), {
+  const {mutate: removeFav, isLoading: removeFavLoading} = useMutation('removeFromCart', ({user, carId}: CartVariable) => apiClient.removeFromFav(user, carId), {
     onSuccess: () => {
       showToast({
         message: "Product removed from cart",
@@ -71,6 +75,12 @@ const Card = ({ userProperty, userId, fav }: Props) => {
   const handleRemoveFromFav = (userID: string, carId: string) => {
     removeFav({user: userID, carId})
   }
+
+  useEffect(()=> {
+    setLoading(removeCartLoading || removeFavLoading || isLoading)
+  }, 
+  [removeCartLoading, removeFavLoading, isLoading, setLoading]
+)
   return (
     <div>
       {results.map((result, index) => {

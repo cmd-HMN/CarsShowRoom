@@ -1,30 +1,55 @@
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import ManageCarsForm  from "../forms/CarsForm/ManageCarsFrom"
-import { useMutation, useQuery } from "react-query"
+import { useMutation, useQuery, useQueryClient } from "react-query"
 import * as apiClient from '../api-client'
+import { useAppContext } from "../context/AppContext"
+import { useLoadingContext } from "../context/LoadingContext"
+import { useEffect } from "react"
 
 const AdminEditCar = () => {
 
     const {carId} = useParams()
+    const navigate = useNavigate()
+    const {showToast} = useAppContext()
+    const queryClient = useQueryClient()
+    const {setLoading} = useLoadingContext()
 
-    const {data: car} = useQuery("fetchMyCarById", () => (apiClient.fetchCarById(carId || '')), {
+    const {data: car, isLoading: fetchCarLoading} = useQuery(["fetchMyCarById", carId], () => (apiClient.fetchCarById(carId || '')), {
         onError :() => {
             alert("Failed to fetch car")
         },
-        enabled: !!carId
+        enabled: !!carId,
     })
 
     const {mutate, isLoading} = useMutation(apiClient.admEditCar, {
-        onSuccess : () => {},
-        onError : () => {}
+        onSuccess : () => {
+            showToast({
+                message: "Car edited successfully",
+                type: "SUCCESS",
+            })
+            queryClient.invalidateQueries("fetchMyCarById")
+            navigate('/admin/cars')
+        },
+        onError : () => {
+            showToast({
+                message: "Failed to edit car",
+                type: "ERROR",
+            })  
+        }
     })
 
     const handleSubmit = (carFormData: FormData) => {
+        carFormData.set("carId", carId || '')
         mutate(carFormData)
     }
 
-    return (
-    <ManageCarsForm onSave={handleSubmit} isLoading={isLoading} car={car}/>
+    useEffect(() => {
+        setLoading(fetchCarLoading)
+    } ,
+    [fetchCarLoading, setLoading]
+)
+    return (    
+        <ManageCarsForm onSave={handleSubmit} isLoading={isLoading} car={car} edit={true}/>
     )
 }
 

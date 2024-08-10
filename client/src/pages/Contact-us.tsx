@@ -5,14 +5,17 @@ import { useAppContext } from "../context/AppContext"
 import { motion } from 'framer-motion';
 import SideBar from "../components/Profile/SideBar";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useLoadingContext } from "../context/LoadingContext";
 
 const ContactUs = () => {
 
     const navigate = useNavigate()
     const {register, formState:{errors}, handleSubmit} = useForm<apiClient.ReportForm>()
     const {showToast} = useAppContext()
+    const {setLoading} = useLoadingContext()
     const { data: userId } = useQuery("getUserId", apiClient.getUser);
-    const { data: user } = useQuery(
+    const { data: user, isLoading: profileLoading} = useQuery(
         ["getUserProfile", userId],
         () => apiClient.getUserProfile(userId),
         {
@@ -20,7 +23,7 @@ const ContactUs = () => {
           refetchOnWindowFocus: false,
         }
       );
-    const mutation = useMutation('ReportProblem', apiClient.ReportProblem, {
+    const {mutate: report, isLoading: reportLoading} = useMutation('ReportProblem', apiClient.ReportProblem, {
         onSuccess: () => {
             showToast({
                 message: "Thank you for your feedback!",
@@ -37,8 +40,13 @@ const ContactUs = () => {
     })
 
     const handleReport = (data: apiClient.ReportForm) => {
-        mutation.mutate(data)
+        report(data)
     }
+    useEffect(() => {
+        setLoading(profileLoading || reportLoading)
+    }, [
+        profileLoading,setLoading, reportLoading
+    ])
     return (
         <div className="w-full h-screen bg-slate-100 flex">
         <div className="flex w-full h-screen sticky top-0">

@@ -11,11 +11,12 @@ import {
   IoMdSpeedometer,
 } from "react-icons/io";
 import Rating from "../components/Rating";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { specificationArray } from "../config/cars-option-config";
 import { useAppContext } from "../context/AppContext";
 import { BsCart, BsHeart } from "react-icons/bs";
 import { FaHeart } from "react-icons/fa";
+import { useLoadingContext } from "../context/LoadingContext";
 
 interface ErrorWithMessage {
   message: string;
@@ -30,9 +31,10 @@ const ViewDetails = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { showToast, isLoggedIn } = useAppContext();
+  const {setLoading} = useLoadingContext()
 
   const Id = carId || "66b27b015f6482d6b4417d8b";
-  const { data: car } = useQuery<CarType>(["getCarById", Id], () =>
+  const { data: car, isLoading: carLoading} = useQuery<CarType>(["getCarById", Id], () =>
     apiClient.fetchCarById(Id)
   );
 
@@ -55,10 +57,10 @@ const ViewDetails = () => {
   };
   const { data: userId } = useQuery("getUserId", apiClient.getUser);
 
-  const { data: user } = useQuery(["getUserProfile", userId], () =>
+  const { data: user, isLoading: profileLoading} = useQuery(["getUserProfile", userId], () =>
     apiClient.getUserProfile(userId)
   );
-  const { mutate: cart } = useMutation(
+  const { mutate: cart, isLoading: addCartLoading} = useMutation(
     "addProdToCart",
     ({ user, carId }: AddToCartVariable) => apiClient.addToCart(user, carId),
     {
@@ -89,7 +91,7 @@ const ViewDetails = () => {
       });
     }
   };
-  const { mutate: removeCart } = useMutation(
+  const { mutate: removeCart, isLoading: removeCartLoading} = useMutation(
     "removeFromCart",
     ({ user, carId }: AddToCartVariable) =>
       apiClient.removeFromCart(user, carId),
@@ -114,7 +116,7 @@ const ViewDetails = () => {
   const handleRemoveFromCart = (userID: string, carId: string) => {
     removeCart({ user: userID, carId });
   };
-  const { mutate: fav } = useMutation(
+  const { mutate: fav, isLoading: addFavLoading} = useMutation(
     "addProdToCart",
     ({ user, carId }: AddToCartVariable) => apiClient.addToFav(user, carId),
     {
@@ -146,7 +148,7 @@ const ViewDetails = () => {
       });
     }
   };
-  const { mutate: removeFav } = useMutation(
+  const { mutate: removeFav, isLoading: removeFavLoading} = useMutation(
     "removeFromCart",
     ({ user, carId }: AddToCartVariable) =>
       apiClient.removeFromFav(user, carId),
@@ -176,6 +178,11 @@ const ViewDetails = () => {
     removeFav({ user: userID, carId });
     decreaseFav(carId)
   };
+  useEffect(()=> {
+    setLoading(addCartLoading || removeCartLoading || addFavLoading || removeFavLoading || profileLoading || carLoading)
+  }, 
+  [addCartLoading, removeCartLoading, addFavLoading, removeFavLoading, profileLoading, setLoading, carLoading]
+)
   return (
     <div className="min-h-screen flex flex-col">
       <div className="flex justify-center items-center sm:text-3xl text-xl text-orange-500 font-extrabold">
@@ -195,7 +202,7 @@ const ViewDetails = () => {
               <img
                 src={car?.imageUrls[url]}
                 alt="car"
-                className="w-full max-w-[60vh] sm:max-w-[60vh] object-cover"
+                className="w-full max-w-[60vh] p-4 sm:max-w-[50vh] object-cover"
               />
               <button
                 onClick={() => handleNext()}

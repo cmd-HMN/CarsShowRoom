@@ -9,9 +9,12 @@ import { useQuery } from "react-query";
 import Pagination from "../components/Pagination";
 import CategoryFilter from "../components/Shop/CategoryFilter";
 import queryString from 'query-string';
+import { useLoadingContext } from "../context/LoadingContext";
 const Shop = () => {
   const navigate = useNavigate();
   const location = useLocation()
+  const {setLoading} = useLoadingContext()
+  const [initialLoadingDone, setInitialLoadingDone] = useState(false);
 
   const [show, setShow] = useState<boolean>(false);
   const [model, setModel] = useState<string>('');
@@ -58,7 +61,7 @@ const Shop = () => {
     sort: sort?.toString()
   };
 
-  const { data: car } = useQuery(
+  const { data: car, isLoading: searchLoading} = useQuery(
     ["search", searchParams],
     () => apiClient.shopSearch_(searchParams),
   );
@@ -97,6 +100,15 @@ const Shop = () => {
     );
   };
   
+  useEffect(() => {
+    if (!initialLoadingDone && searchLoading) {
+      setLoading(true);
+    } else if (!searchLoading) {
+      setLoading(false); 
+      setInitialLoadingDone(true); 
+    }
+  }, [setLoading, searchLoading, initialLoadingDone]);
+
   return (
     <div className="flex min-h-screen">
     <motion.div
@@ -250,7 +262,7 @@ const Shop = () => {
             </div>
         </div>
           <ShopCard carArray={car?.data} total={car?.pagination.total}/>
-          {car?.pagination.total && (
+          {car?.data && car?.pagination.total > 0 && (
             <Pagination
               page={car?.pagination.page}
               pages={car?.pagination.pages}

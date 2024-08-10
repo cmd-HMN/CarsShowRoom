@@ -1,9 +1,11 @@
 import { useAppContext } from "../context/AppContext";
 import SideBar from "../components/Profile/SideBar";
 import { motion } from "framer-motion";
-import { useMutation } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import * as apiClient from '../api-client'
 import { useNavigate } from "react-router-dom";
+import { useLoadingContext } from "../context/LoadingContext";
+import { useEffect } from "react";
 
 export type UserModelType = {
   name: string;
@@ -16,15 +18,19 @@ export type UserModelType = {
 const SignOut= () => {
   const { showToast } = useAppContext();
   const navigate = useNavigate()
-
-  const {mutate, isLoading} = useMutation('signOut', apiClient.signout, {
+  const {setLoading} = useLoadingContext()
+  const queryClient = useQueryClient()
+  const {data: validate} = useQuery('validateToken', apiClient.validateToken)
+  
+  const {mutate, isLoading: signOutLoading} = useMutation('signOut', apiClient.signout, {
     onSuccess: async () => {
       showToast({
         message: "Signout Successful",
         type: "SUCCESS",
       });
-     {if (!isLoading) navigate('/');}
-    },
+      queryClient.invalidateQueries('validateToken')
+      navigate('/');
+    },  
     onError: (error: Error) => {
       showToast({
         message: error.message,
@@ -37,6 +43,11 @@ const SignOut= () => {
     mutate()
   }
 
+  useEffect(() => {
+    setLoading(signOutLoading)
+  }, 
+  [signOutLoading, setLoading]
+)
   return (
     <div className="w-full h-screen bg-slate-100 flex">
       <div className="flex w-full h-screen sticky top-0">

@@ -8,6 +8,8 @@ export type SignUp = {
     password: string;
     name: string;   
 }
+
+//Signup  
 export const signup = async (data: SignUp) => {
 
     try{
@@ -24,23 +26,25 @@ export const signup = async (data: SignUp) => {
         return response.json();
     }
 
-    if (response.status === 400) {
+    if (response.status === 404) {
         const errorData = await response.json();
         throw new Error(errorData.msg)
     }
 
     if(!response.ok) {
-        throw new Error('Sign in failed')
+        throw new Error('Sign up failed')
     }
 }catch (err) {
     if (err instanceof Error) {
-        throw new Error(err.message || 'Sign in failed');
+        throw new Error(err.message || 'Sign up failed');
     } else {
-        throw new Error('Sign in failed');
+        throw new Error('Sign up failed');
     }
 }
 }
 
+
+//Sign in (auth part)
 export type SignInDataType = {
     email: string;
     password: string;
@@ -60,7 +64,7 @@ export const signin = async (data: SignInDataType) => {
             return response.json();
         }
 
-        if (response.status === 400) {
+        if (response.status === 404) {
             const errorData = await response.json();
             throw new Error(errorData.msg);
         }
@@ -93,6 +97,8 @@ export const signout = async() => {
     return response
 
 }
+
+//JWT token
 export const validateToken = async ()=> {
 
     const response = await fetch(`${API_BASE_URL}/api/auth/validate-token`, {
@@ -106,6 +112,8 @@ export const validateToken = async ()=> {
     return response.json()
 }
 
+
+//admin part
 export const admSignIn = async (data: SignInDataType) => {
     const response = await fetch(`${API_BASE_URL}/api/admin/sign-in`, {
         credentials: 'include',
@@ -118,6 +126,44 @@ export const admSignIn = async (data: SignInDataType) => {
 
     if(!response.ok) {
         throw new Error('Sign in failed')
+    }
+    return response.json()
+}
+
+export const admSignOut = async() => {
+    
+    const response = await fetch(`${API_BASE_URL}/api/admin/sign-out`, {
+        credentials: 'include',
+        method:"POST",
+    })
+
+    if(!response.ok) {
+        throw new Error('Sign out failed')
+    }
+
+    return response
+}
+
+export const getAdmId = async() => {
+
+    const response = await fetch(`${API_BASE_URL}/api/admin/admId`, {
+        credentials: 'include',
+    })
+
+    if(!response.ok) {
+        throw new Error('failed')
+    }
+    return response.json()
+}
+
+export const getAdmProfile = async(id: string) =>{
+
+    const response = await fetch(`${API_BASE_URL}/api/admin/adminProfile/${id}`, {
+        credentials: 'include',
+    })
+
+    if(!response.ok) {
+        throw new Error('failed')
     }
     return response.json()
 }
@@ -179,9 +225,10 @@ export const admEditCar = async(data: FormData) => {
 
     const response = await fetch(`${API_BASE_URL}/api/admin/${data.get("carId")}`, {
         credentials: 'include',
-        method:"POST",
+        method:"PUT",
         body: data,
     })
+
 
     if(!response.ok) {
         throw new Error('Sign in failed')
@@ -190,6 +237,7 @@ export const admEditCar = async(data: FormData) => {
     return response.json()
 }
 
+//Home.tsx part
 export const featuredProduct = async():Promise<CarType[]> => {
 
     const response = await fetch(`${API_BASE_URL}/api/admin/featured-product`, {
@@ -218,24 +266,31 @@ export const bestSellerProd = async():Promise<CarType[]> => {
 export type news= {
     email: string
 }
-export const newsLetter = async(data: news) => {
-
-    const response = await fetch(`${API_BASE_URL}/api/auth/news`, {
+export const newsLetter = async (data: news) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/auth/news`, {
         credentials: 'include',
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data)
-    })
-
-    if(!response.ok) {
-        throw new Error('Sign in failed')
+        body: JSON.stringify(data),
+      });
+  
+      if (!response.ok) {
+        const errorMessage = await response.json();
+        throw new Error(errorMessage.message || 'An unknown error occurred');
+      }
+  
+      return await response.json();
+  
+    } catch (error) {
+      throw new Error(error instanceof Error ? error.message : 'An unknown error occurred');
     }
+  };
+  
 
-    return response.json()
-
-}
+//UserData (profile.tsx)
 
 export const getUser = async () => {
 
@@ -244,7 +299,7 @@ export const getUser = async () => {
     })
 
     if(!response.ok) {
-        throw new Error('Sign in failed')
+        throw new Error('Error Fetching')
     }
 
     const data = await response.json()
@@ -259,7 +314,7 @@ export const getUserProfile = async(userId: string):Promise<UserType> => {
     })
 
     if(!response.ok) {
-        throw new Error('Sign in failed')
+        throw new Error('Error Fetching')
     }
     
     return response.json()
@@ -319,6 +374,7 @@ export const addToFav = async (userId:string, carID:string) => {
     return response.json()
 }
 
+//Report tsx
 export type ReportForm = {
     userId: string;
     detail: string
@@ -340,6 +396,40 @@ export const ReportProblem = async(data: ReportForm) => {
 
     return response.json()
 }
+
+interface searchPara {
+    page?: string
+    pageSize?: string
+    sort?: string
+}
+export const getReport = async(searchPara: searchPara) => {
+
+    const query = new URLSearchParams()
+    
+    if(searchPara.page){
+        query.append('page', searchPara.page.toString())
+    }
+
+    if(searchPara.pageSize){
+        query.append('pageSize', searchPara.pageSize.toString())
+    }
+
+    if(searchPara.sort){
+        query.append('sort', searchPara.sort.toString())
+    }
+
+    const response = await fetch(`${API_BASE_URL}/api/contact-us/report?${query}`, {
+        credentials: 'include',
+    })
+
+    if(!response.ok) {
+        throw new Error('Failed')
+    }
+
+    return response.json()
+}
+
+//Car update calls
 
 export const ChangeSold = async(carId: string) => {
 
@@ -409,7 +499,7 @@ export const removeFromFav = async (userId:string, carId:string) => {
     return response.json()
 }
 
-
+//shop tsx
 export type CarsSearchProps = {
     data: CarType[],
     pagination: {
@@ -487,6 +577,7 @@ export const shopSearch_ = async (searchParams: searchParams):Promise<CarsSearch
     return await response.json()
 }
 
+//blog tsx
 type Blog = {
     title:string
     description:string
@@ -576,6 +667,7 @@ export const blogSearch = async(searchBlog: SearchBlog) => {
     return await response.json()
 }
 
+//view details of blog
 export const fetchBlogById = async(id:string) => {
     const response = await fetch(`${API_BASE_URL}/api/blog/${id}`, {
         credentials: 'include',

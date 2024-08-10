@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import { blogSearch, blogUpload, coverImageUpload, getBlog, getBlogById, latestBlogs, trendingBlogs } from '../controllers/blog.controller';
 import adminVerifyToken from '../middleware/admin.middleware';
 import multer from 'multer';

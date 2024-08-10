@@ -3,6 +3,8 @@ import { Editor } from "@tinymce/tinymce-react";
 import { useMutation } from "react-query";
 import * as apiClient from '../api-client'
 import { useForm } from "react-hook-form";
+import { useAppContext } from "../context/AppContext";
+import AdmSideBar from "../components/Admin/AdmSideBar";
 interface blog {
   title: string;
   description: string;
@@ -12,6 +14,7 @@ interface blog {
 const AdminBlog = () => {
   const [content, setContent] = useState("");
   const [coverImage, setCoverImage] = useState("")
+  const {showToast} = useAppContext()
 
   
   const {register, formState:{errors}, handleSubmit, setValue} = useForm<blog>()
@@ -26,7 +29,16 @@ const AdminBlog = () => {
   };
   const {mutate: blogUpload} = useMutation('blogUpload', (blog: blog) => apiClient.BlogUpl(blog), {
     onSuccess: () => {
-      alert('Blog uploaded successfully')
+      showToast({
+        message: 'Blog Uploaded',
+        type: 'SUCCESS',
+      })
+    },
+    onError : () => {
+      showToast({
+        message: 'Blog Upload Failed',
+        type: 'ERROR',
+      })
     }
   })
 
@@ -61,11 +73,21 @@ const AdminBlog = () => {
 
   const onSubmit = (blog: blog) => {
     blogUpload(blog)
-    console.log(blog)
   };
 
   return (
-    <div className="flex flex-col min-h-screen p-7">
+    <div className="flex min-h-screen">
+      <div className="sticky top-0 h-full">
+        <AdmSideBar 
+          optionOne={false}
+          optionTwo={false}
+          optionThree={false}
+          optionFour={true}
+          optionFive={false}
+          head={"Blog"}
+        />
+      </div>
+      <div className="flex flex-1 flex-col p-4">
       <div className="flex flex-row justify-center items-center font-bold text-xl sm:text-3xl text-Dark">
         Write a <span className="text-orange-500 ml-1"> Blog</span>
       </div>
@@ -145,6 +167,7 @@ const AdminBlog = () => {
           Post
         </button>
       </form>
+    </div>
     </div>
   );
 };

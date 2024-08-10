@@ -1,5 +1,5 @@
 import { useMutation } from 'react-query';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import * as apiClient from '../../api-client'
 import { useState } from 'react';
 import { useAppContext } from '../../context/AppContext';
@@ -8,16 +8,21 @@ import { useAppContext } from '../../context/AppContext';
 
 const Mail = () => {
   const [email, setEmail] = useState('')
-  const {showToast} = useAppContext()
+  const {isLoggedIn, showToast} = useAppContext()
+  const navigate = useNavigate()
 
-  const { mutate }= useMutation(apiClient.newsLetter, {
+  const { mutate}= useMutation(apiClient.newsLetter, {
     onSuccess: (data) => {
       showToast({message: data.message, type: "SUCCESS"})
-      console.log(data)
     },
-    onError: (error) => {
-      showToast({message: ((error as {message: string}).message), type: "ERROR"})
-      console.log(error)
+    onError: () => {
+      if(!isLoggedIn){
+        navigate('/sign-in')
+        showToast({message: "Sign in First", type: "ERROR"})
+      }
+      if(isLoggedIn){
+        showToast({message: "Already Subscribed", type: "ERROR"})
+      }
     }
   })
 

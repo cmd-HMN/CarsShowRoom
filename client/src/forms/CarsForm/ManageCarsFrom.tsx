@@ -63,9 +63,10 @@ type Props = {
     car?: CarType
     onSave : (hotelFormData: FormData) => void
     isLoading : boolean
+    edit: boolean
 }
 
-const ManageCarsForm = ({onSave ,isLoading, car}: Props) => {
+const ManageCarsForm = ({onSave ,isLoading, car, edit}: Props) => {
     
     const formMethod = useForm<CarType>()
 
@@ -90,6 +91,8 @@ const ManageCarsForm = ({onSave ,isLoading, car}: Props) => {
             formData.append("imageFiles", imageFile)
         })
         
+        formData.append("rating", data.rating.toString())
+        formData.append("sold", data.sold.toString())
         formData.append("width", data.width)
         formData.append("height", data.height)
         formData.append("length", data.length)
@@ -138,7 +141,7 @@ const ManageCarsForm = ({onSave ,isLoading, car}: Props) => {
     return (    
         <FormProvider {...formMethod}>
             <form onSubmit={onsubmit} className="m-4">
-                <Details />
+                <Details edit={edit}/>
                 <Specification />
                 <span className="flex justify-end">
                     <button 

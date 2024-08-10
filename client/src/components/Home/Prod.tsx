@@ -9,6 +9,7 @@ import { IoMdArrowDropleft, IoMdArrowDropright} from "react-icons/io";
 import * as apiClient from '../../api-client'
 import { useAppContext } from "../../context/AppContext";
 import { FaHeart } from "react-icons/fa";
+import { useLoadingContext } from "../../context/LoadingContext";
 
   type Props = {
   api: () => Promise<CarType[]>
@@ -24,11 +25,14 @@ interface AddToCartVariable {
 }
 const Prod = ({api, heading}: Props) => {
   const navigate = useNavigate()
-  const { data: car } = useQuery(
+  const { data: car, isLoading} = useQuery(
     heading,
     api,
     {}
   );
+
+  const {setLoading} = useLoadingContext()
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentCars, setCurrentCars] = useState<CarType[]>([]);
   const [display, setDisplay] = useState<number>(3)
@@ -56,11 +60,11 @@ const Prod = ({api, heading}: Props) => {
     }
     
   }, [])
-  const { data: userId } = useQuery("getUserId", apiClient.getUser);
+  const { data: userId, isLoading:userLoading} = useQuery("getUserId", apiClient.getUser);
 
-  const {data: user} = useQuery(["getUserProfile", userId], () => apiClient.getUserProfile(userId))
+  const {data: user, isLoading: profileLoading} = useQuery(["getUserProfile", userId], () => apiClient.getUserProfile(userId))
 
-  const {mutate: cart}= useMutation('addProdToCart',  ({ user, carId }: AddToCartVariable) => apiClient.addToCart(user, carId), {
+  const {mutate: cart, isLoading: cartLoading}= useMutation('addProdToCart',  ({ user, carId }: AddToCartVariable) => apiClient.addToCart(user, carId), {
     onSuccess: () => {
       showToast({
         message: "Product added to cart",
@@ -77,7 +81,7 @@ const Prod = ({api, heading}: Props) => {
     },
   })
   
-  const {mutate: fav} = useMutation('addProdToCart',  ({ user, carId }: AddToCartVariable) => apiClient.addToFav(user, carId), {
+  const {mutate: fav ,isLoading: favLoading} = useMutation('addProdToCart',  ({ user, carId }: AddToCartVariable) => apiClient.addToFav(user, carId), {
     onSuccess: () => {
       showToast({
         message: "Product added to favorite",
@@ -123,7 +127,7 @@ const Prod = ({api, heading}: Props) => {
   const {mutate: increaseFav} = useMutation('IncSold', (id: string) => apiClient.IncFav(id))
   const {mutate: decreaseFav} = useMutation('IncSold', (id: string) => apiClient.DecFav(id))
 
-  const {mutate: removeCart} = useMutation('removeFromCart', ({user, carId}: AddToCartVariable) => apiClient.removeFromCart(user, carId), {
+  const {mutate: removeCart, isLoading: removeCartLoading} = useMutation('removeFromCart', ({user, carId}: AddToCartVariable) => apiClient.removeFromCart(user, carId), {
     onSuccess: () => {
       showToast({
         message: "Product removed from cart",
@@ -143,7 +147,7 @@ const Prod = ({api, heading}: Props) => {
   const handleRemoveFromCart = (userID: string, carId: string) => {
     removeCart({user: userID, carId})
   }
-  const {mutate: removeFav} = useMutation('removeFromFav', ({user, carId}: AddToCartVariable) => apiClient.removeFromFav(user, carId), {
+  const {mutate: removeFav, isLoading: removeFavLoading} = useMutation('removeFromFav', ({user, carId}: AddToCartVariable) => apiClient.removeFromFav(user, carId), {
     onSuccess: () => {
       showToast({
         message: "Product removed from cart",
@@ -176,19 +180,24 @@ const Prod = ({api, heading}: Props) => {
       setCurrentCars(carsToShow);
     }
   }, [display, lengthArray, car, currentIndex])
+  
+  useEffect(() => {
+    setLoading(isLoading || cartLoading || favLoading || userLoading || profileLoading || removeCartLoading || removeFavLoading)
+  }, [isLoading, setLoading, cartLoading, favLoading, userLoading ,profileLoading, removeCartLoading, removeFavLoading])
 
   if (!car || car.length === 0) {
     return <p>Unable to connect to database</p>;
   }
 
 
-  const handleNext = () => {
+  const handleNext = () => {  
     setCurrentIndex((prevIndex) => (prevIndex + display) % lengthArray);
   };
 
   const handlePrev = () => {
     setCurrentIndex((prevIndex) => (prevIndex - display + car.length) % lengthArray);
   };
+
 
   return (
     <div className="flex flex-col gap-4 justify-center items-center bg-offWhite">

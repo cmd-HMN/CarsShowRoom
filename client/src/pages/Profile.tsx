@@ -6,7 +6,8 @@ import SideBar from "../components/Profile/SideBar";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useLoadingContext } from '../context/LoadingContext';
 
 export type UserModelType = {
   name: string;
@@ -19,7 +20,8 @@ export type UserModelType = {
 const Profile = () => {
   const navigate = useNavigate();
   const { showToast } = useAppContext();
-  const { data: userId } = useQuery("getUserId", apiClient.getUser);
+  const {setLoading} = useLoadingContext()
+  const { data: userId, isLoading: userLoading} = useQuery("getUserId", apiClient.getUser);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] =
     useState<boolean>(false);
@@ -32,7 +34,7 @@ const Profile = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
 
-  const { data: user } = useQuery(
+  const { data: user, isLoading: profileLoading} = useQuery(
     ["getUserProfile", userId],
     () => apiClient.getUserProfile(userId),
     {
@@ -54,7 +56,7 @@ const Profile = () => {
     handleSubmit: handleSubmitUsername,
   } = useForm<UserModelType>();
 
-  const mutationPassword = useMutation(
+  const {mutate: mutationPassword, isLoading: passwordLoading} = useMutation(
     (data: UserModelType) => apiClient.updateUserProfile(userId, data),
     {
       onSuccess: () => {
@@ -73,7 +75,7 @@ const Profile = () => {
     }
   );
 
-  const mutationUsername = useMutation(
+  const {mutate:mutationUsername, isLoading: usernameLoading} = useMutation(
     (data: UserModelType) => apiClient.updateUserProfile(userId, data),
     {
       onSuccess: () => {
@@ -93,12 +95,16 @@ const Profile = () => {
   );
 
   const onSubmitPassword = (data: UserModelType) => {
-    mutationPassword.mutate(data);
+    mutationPassword(data);
   };
 
   const onSubmitUsername = (data: UserModelType) => {
-    mutationUsername.mutate(data);
+    mutationUsername(data);
   };
+
+  useEffect(() => {
+    setLoading(userLoading || profileLoading || passwordLoading || usernameLoading)
+  }, [setLoading, userLoading, profileLoading, usernameLoading, passwordLoading])
 
   return (
     <div className="w-full h-screen bg-slate-100 flex">
@@ -154,7 +160,16 @@ const Profile = () => {
                         type={showPassword ? "text" : "password"}
                         {...registerPassword("password", {
                           required: "Password is required",
-                        })}
+                        minLength: {
+                          value: 6,
+                          message: "Password must be of at least 6 characters",
+                        },
+                        pattern: {
+                          value:
+                            /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
+                          message:
+                            "Password must include uppercase letters, a number, and a special character 🤓",
+                        }})}
                         className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-300 pr-10"
                       />
                       <button

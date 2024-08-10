@@ -46,6 +46,22 @@ export const adminSignIn =async (req: Request, res: Response) => {
 }
 }
 
+
+export const getAdminProfile = async(req: Request, res:Response) => {
+
+    try {
+        const admId = req.params.id
+
+        const user = await Admin.findById(admId)
+
+        res.status(200).json(user)
+
+    } catch (err) {
+
+        return res.status(500).json({msg: err})
+
+    }
+}
 export const adminCarsFrom = async (req: Request, res: Response) => {
     try {
 
@@ -86,7 +102,6 @@ export const adminCarsFrom = async (req: Request, res: Response) => {
 
     } catch(e) {
 
-        console.log("Error creating car", e)
         res.status(500).json({
             message: "Something went wrong"
         })
@@ -118,55 +133,54 @@ export const adminGetCar = async (req: Request, res: Response) => {
     }
 }
 
-export const adminEditCar = async (req:Request, res:Response) => {
-    
-    try
-   { const updateCar: CarsType = req.body
-    updateCar.updatedAt = new Date()
+export const adminEditCar = async (req: Request, res: Response) => {
+    try {
+        const updateCar: Partial<CarsType> = req.body;
+        updateCar.updatedAt = new Date();
+        const id = req.params.carId.toString();
 
-    const car = await Cars.findOneAndUpdate({
-        _id: req.params.carId,
-        userId: req.userId
-    }, updateCar, {
-        new: true
-    })
+        const car = await Cars.findById(id);
 
-    if(!car) {
-        return res.status(404).json({
-            message: "Car not found"
-        })
-    }
+        if (!car) {
+            return res.status(404).json({
+                message: "Car not found",
+            });
+        }
+        
 
-    const imageFiles = req.files as Express.Multer.File[]
+        Object.keys(updateCar).forEach((key) => {
+            const carKey = key as keyof CarsType;
+            
+            if (updateCar[carKey] !== undefined) {
+                (car[carKey] as typeof updateCar[typeof carKey]) = updateCar[carKey]!;
+            }
+        });
 
+        if (req.files) {
+            const imageFiles = req.files as Express.Multer.File[];
 
-    const uploadPromises = imageFiles.map(async(image) => {
+            const uploadPromises = imageFiles.map(async (image) => {
+                const b64 = Buffer.from(image.buffer).toString("base64");
+                const dataURI = `data:${image.mimetype};base64,${b64}`;
+                const res = await cloudinary.v2.uploader.upload(dataURI);
+                return res.url;
+            });
 
-        const b64 = Buffer.from(image.buffer).toString("base64")
+            const updatedImgUrls = await Promise.all(uploadPromises);
+            car.imageUrls = Array.from(new Set([...updatedImgUrls, ...(updateCar.imageUrls || [])]));
+        }
 
-        const dataURI = `data:${image.mimetype};base64,${b64}`
+        const updatedCar = await car.save();
 
-        const res = await cloudinary.v2.uploader.upload(dataURI);
-
-        return res.url
-    })
-
-    const updatedImgUrls = await Promise.all(uploadPromises)
-
-    car.imageUrls = [...updatedImgUrls, ...(updateCar.imageUrls || [])]
-
-    await car.save()
-
-    res.status(200).json(car)
-}
-    catch (e) {
-
+        res.status(200).json(updatedCar);
+    } catch (e) {
+        console.error(e);
         res.status(500).json({
-            message: "Something went wrong"
-        })
+            message: "Something went wrong",
+        });
     }
+};
 
-}
 
 export const featuredProduct = async (req: Request, res: Response) => {
 

@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from 'framer-motion';
 import { FormEvent, useEffect, useState } from "react";
 import Pagination from "../components/Pagination";
+import { useLoadingContext } from '../context/LoadingContext';
 interface Blog_ {
   _id: string;
   title: string;
@@ -26,6 +27,8 @@ const Blog = () => {
   const [title, setTitle] = useState<string>('')
   const [displaySearch, setDisplaySearch] = useState<boolean>(false)
   const [page, setPage] = useState<number>(1)
+  const {setLoading} = useLoadingContext()
+  const [initialLoadingDone, setInitialLoadingDone] = useState(false);
 
   const searchPara = {
     title,
@@ -44,14 +47,14 @@ const Blog = () => {
   } ,[])
 
 
-  const { data: blog } = useQuery<SearchBlog>(["getBlogs", searchPara], () => apiClient.blogSearch(searchPara));
+  const { data: blog, isLoading: blogLoading} = useQuery<SearchBlog>(["getBlogs", searchPara], () => apiClient.blogSearch(searchPara));
 
   const navigate = useNavigate()
-  const { data: trending } = useQuery<BlogArray>(
+  const { data: trending, isLoading: trendingLoading} = useQuery<BlogArray>(
     "trendingBlog",
     apiClient.trendingBlog
   );
-  const { data: latest } = useQuery<BlogArray>(
+  const { data: latest, isLoading: latestLoading} = useQuery<BlogArray>(
     "latestBlog",
     apiClient.latestBlog
   );
@@ -65,6 +68,14 @@ const Blog = () => {
     navigate('/blogs')
   }
 
+  useEffect(() => {
+    if (!initialLoadingDone && blogLoading) {
+      setLoading(true); 
+    } else if (!blogLoading) {
+      setLoading(false || trendingLoading || latestLoading); 
+      setInitialLoadingDone(true); 
+    }
+  }, [setLoading, initialLoadingDone, blogLoading, latestLoading, trendingLoading]);
   return (
     <motion.div
       initial={{ opacity: 0 }}

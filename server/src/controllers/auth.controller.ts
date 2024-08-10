@@ -22,7 +22,7 @@ export const signIn = async (req: Request, res: Response) => {
     const user = await User.findOne({email})
 
     if(!user) {
-        return res.status(400).json({msg: "Email doesn't exits"})
+        return res.status(404).json({msg: "Email doesn't exits"})
     }
 
     const isMatch = await bcrypt.compare(password, user.password)
@@ -50,7 +50,8 @@ export const signIn = async (req: Request, res: Response) => {
 }
 
 export const newLetter = async (req:Request, res:Response) => {
-    
+
+    try{
     const {email} = req.body;
 
     const user = await User.findOne({
@@ -61,13 +62,16 @@ export const newLetter = async (req:Request, res:Response) => {
         return res.status(404).json({msg: "Email doesn't exits"})
     }
     else if(user.newLetter) {
-        return res.status(200).json({msg: "Email already subscribed"})
+        return res.status(400).json({msg: "Email already subscribed"})
     }
     else{
         user.newLetter = true
         await user.save()
         return res.status(200).json({msg: "Email subscribed"})
-    }
+    }}
+    catch(e){
+    res.status(500).json('Something went wrong')
+}
 }
 
 export const getProfile = async(req: Request, res:Response) => {

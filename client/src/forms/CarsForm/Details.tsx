@@ -5,7 +5,11 @@ import "react-quill/dist/quill.snow.css";
 import { useEffect } from "react";
 import ImageSection from "./ImageSection";
 import Category from "./Category";
-const Details = () => {
+
+type Props = {
+  edit: boolean
+}
+const Details = ({edit}: Props) => {
   const {
     register,
     watch,
@@ -57,8 +61,20 @@ const Details = () => {
   return (
     <>
       <h1 className="flex justify-center items-center font-bold text-3xl my-6">
-        Add Car
+        Add/Edit Cars
       </h1>
+      {edit && 
+      <div className="my-1">
+            <span className="text-sm font-bold">
+                Instructions
+                <p>
+                    1. Upload images first
+                    <br />
+                    2. Then fill in the form
+                </p>
+            </span>
+        </div>
+}
       <div className="p-6 gap-8 border border-gray-300 rounded-lg shadow-lg">
         <div className="grid grid-cols-2 gap-4">
           <div className="flex flex-col space-y-2">

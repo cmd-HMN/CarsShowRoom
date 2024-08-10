@@ -4,12 +4,15 @@ import SideBar from "../components/Profile/SideBar";
 import { motion } from 'framer-motion';
 import Card from "../components/Cart/Cards";
 import { useNavigate } from "react-router-dom";
+import { useLoadingContext } from "../context/LoadingContext";
+import { useEffect } from "react";
 
 const Cart = () => {
-  const { data: userId } = useQuery("getUserId", apiClient.getUser);
+  const { data: userId, isLoading: userLoading} = useQuery("getUserId", apiClient.getUser);
   const navigate = useNavigate()
+  const {setLoading} = useLoadingContext()
 
-  const { data: user } = useQuery(
+  const { data: user, isLoading: profileLoading} = useQuery(
     ["getUserProfile", userId],
     () => apiClient.getUserProfile(userId),
     {
@@ -18,6 +21,11 @@ const Cart = () => {
     }
   );
 
+  useEffect(() => {
+    setLoading(userLoading || profileLoading)
+  }, 
+  [userLoading, profileLoading, setLoading]
+)
   return (
    <div className="min-h-screen flex">
   <div className="sticky top-0 h-screen bg-Dark">

@@ -22,7 +22,7 @@ const AdminCarsForm = () => {
         mutate(data)
     }
     return (
-        <ManageCarsForm onSave={handleSubmit} isLoading={isLoading}/> 
+        <ManageCarsForm onSave={handleSubmit} isLoading={isLoading} edit={false}/> 
     )
 }
 

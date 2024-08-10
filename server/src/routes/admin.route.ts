@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import {  adminCarsFrom, adminEditCar, adminGetCar, adminSignIn, bestSellerProduct, featuredProduct } from '../controllers/admin.controller';
+import {  adminCarsFrom, adminEditCar, adminGetCar, adminSignIn, bestSellerProduct, featuredProduct, getAdminProfile } from '../controllers/admin.controller';
 import { check, validationResult } from 'express-validator';
 import adminVerifyToken from '../middleware/admin.middleware';
 import multer from 'multer'
@@ -48,6 +48,11 @@ router.get("/validate-token", adminVerifyToken, (req: Request, res: Response) =>
         message: "Token"
     })
 })
+router.get('/admId', adminVerifyToken , async(req:Request, res:Response)  => {
+    res.status(200).json(req.userId)
+})
+
+router.get('/adminProfile/:id', getAdminProfile)
 
 router.post("/form" ,upload.array("imageFiles", 6), adminCarsFrom)
 
@@ -76,5 +81,6 @@ router.get("/best-seller-product", bestSellerProduct)
 
 router.get("/:id", adminGetCar)
 
-router.get("/:carId", adminVerifyToken, upload.array("imageFiles", 6), adminEditCar)
+router.put("/:carId", adminVerifyToken, upload.array("imageFiles", 6), adminEditCar)
+
 export default router
