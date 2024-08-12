@@ -113,7 +113,7 @@ CLOUDINARY_API_SECRET=<your-cloudinary-api-secret>
 - There is no reset password page.
 
 
-If you encounter any issues, please [open an issue](https://github.com/abhishekjha1/car-showroom/issues) on GitHub.
+If you encounter any issues, please [open an issue](https://github.com/cmd-HMN/CarsShowRoom/issues) on GitHub.
 
 ## 💡 Inspiration
 
