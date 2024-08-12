@@ -20,7 +20,7 @@ const AdminSignIn = () => {
                 message: "Signin Successful",
                 type: "SUCCESS"
             });
-            navigate("/admin/profile");
+            navigate('/admin/profile'); 
         },
         onError: (error: Error) => {
             showToast({

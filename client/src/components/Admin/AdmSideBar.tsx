@@ -128,7 +128,7 @@ const AdmSideBar = ({
                 className={`flex ${
                   optionOne && "bg-orange-500"
                 } p-2 w-full h-10 items-center justify-center`}
-                onClick={() => navigate("/profile")}
+                onClick={() => navigate("/admin/profile")}
                 animate={{ width: ["#ff6699", "#66ccff", "#ffcc66"] }}
                 transition={{
                   duration: 5,

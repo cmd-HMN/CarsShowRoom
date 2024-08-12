@@ -21,7 +21,7 @@ Welcome to **Car Showroom**, a web application exploring modern web technologies
 
 ## 🏃‍♂️ How to Run
 
-### Method 1: Dual-Terminal Action 🎯
+### Method 1: Dual-Terminal Action 🎯(Prefer Path)
 
 1. Open two terminals.
 2. **Server**:
@@ -57,10 +57,7 @@ Welcome to **Car Showroom**, a web application exploring modern web technologies
    npm run start
    ```
 3. **Localhost**:
-   - Client: `http://localhost:5173`
-   - Server: `http://localhost:3000`
-
-**Pro Tip**: Use one terminal to rule them all! You can manage everything from the server directory after building both sides.
+   - Host: `http://localhost:3000`
 
 ## 🔑 Environment Variables
 
@@ -100,8 +97,23 @@ CLOUDINARY_API_SECRET=<your-cloudinary-api-secret>
 
 ## 📚 Additional Notes
 
+- **Add Data** : To add data more efficiently use admin form (There is no admin Sign up form to add the default admin run: )
+   ```bash
+   cd server
+   ts-node src/defaultAdmin.ts
+   ```
 - **Development**: Tailored for learning and exploring web tech! Feel free to modify and experiment.
 - **Environment**: Ensure MongoDB is running locally or update the connection string in the `.env` file.
+
+## Unfinished features 
+
+- There is no page for payment/Checkout.
+- There is no admin Sign in page.
+- The report page is also uncompleted.
+- There is no reset password page.
+
+
+If you encounter any issues, please [open an issue](https://github.com/abhishekjha1/car-showroom/issues) on GitHub.
 
 ## 💡 Inspiration
 

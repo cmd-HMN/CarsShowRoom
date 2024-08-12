@@ -54,6 +54,7 @@
                         <ul>
                             <LinkItem to="/contact-us" text="CONTACT US" />
                             <LinkItem to="/about-us" text="ABOUT US" />
+                            <LinkItem to="/admin/sign-in" text="ADMIN" />
                         </ul>
                     </div>
 
