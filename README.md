@@ -117,4 +117,4 @@ If you encounter any issues, please [open an issue](https://github.com/cmd-HMN/C
 
 ## 💡 Inspiration
 
-This project is a playground for exploring full-stack development with a modern tech stack. Feel free to dive in, learn, and contribute! 
+Just wanna see what web development was.
