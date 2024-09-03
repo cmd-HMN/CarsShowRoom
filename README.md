@@ -8,7 +8,7 @@ Welcome to **Car Showroom**, a web application exploring modern web technologies
 - **Admin CRUD**: Admins have full control over managing users, inventory, and more.
 - **User Dashboard**: Personalized dashboard for users to manage their activities.
 - **Admin Dashboard**: Comprehensive dashboard for admins to oversee the entire platform.
-- **Cart**: Add cars to your cart for easy checkout.
+- **Cart**: Add cars to your cart
 - **Favorites**: Mark your favorite cars for later!
 - **Sold, View & Like**: Track sold items, views, and likes for an interactive experience.
 
@@ -108,8 +108,8 @@ CLOUDINARY_API_SECRET=<your-cloudinary-api-secret>
 ## Unfinished features 
 
 - There is no page for payment/Checkout.
-- There is no admin Sign in page.
-- The report page is also uncompleted.
+- There is no admin-sign-in page.
+- The is no report-view-details page.
 - There is no reset password page.
 
 
@@ -117,4 +117,4 @@ If you encounter any issues, please [open an issue](https://github.com/cmd-HMN/C
 
 ## 💡 Inspiration
 
-This project is a playground for exploring full-stack development with a modern tech stack. Feel free to dive in, learn, and contribute! 
+Just wanna see what web development was.
