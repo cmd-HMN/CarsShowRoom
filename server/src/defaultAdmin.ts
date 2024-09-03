@@ -10,7 +10,7 @@ async function defaultAdmin() {
         });
 
         const adminEmail = 'admin@gmail.com';
-        const password = await bcrypt.hash('admin', 10);
+        const password = '@dmin123'
 
         const admin = new Admin({
             name: 'admin',
@@ -20,6 +20,8 @@ async function defaultAdmin() {
 
         await admin.save();
         console.log('admin created');
+        console.log(adminEmail)
+        console.log(password)
 
         mongoose.connection.close();
     } catch (err) {

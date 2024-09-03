@@ -18,8 +18,9 @@ export const adminSignIn =async (req: Request, res: Response) => {
         const {email, password} = req.body;
         const user = await Admin.findOne({email})
 
+
     if(!user) {
-        return res.status(400).json({msg: "Email doesn't exits"})
+        return res.status(404).json({msg: "Email doesn't exits"})
     }
 
     const isMatch = await bcrypt.compare(password, user.password)
@@ -28,7 +29,7 @@ export const adminSignIn =async (req: Request, res: Response) => {
         return res.status(400).json({msg: "Invalid password"})
     }
 
-    const token = jwt.sign({
+    const token = jwt.sign({    
         id: user.id
     }, process.env.JWT_SECRET_KEY as string, {
         expiresIn: "1d"
