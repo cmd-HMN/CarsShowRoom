@@ -10,7 +10,7 @@ async function defaultAdmin() {
         });
 
         const adminEmail = 'admin@gmail.com';
-        const password = '@dmin123'
+        const password = '@Dmin123'
 
         const admin = new Admin({
             name: 'admin',
